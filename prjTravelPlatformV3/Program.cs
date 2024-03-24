@@ -109,10 +109,11 @@ builder.Services.AddSignalR();
 
 //mailService
 builder.Services.AddTransient<MailService>();
-
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddSingleton<TokenManager>();
 builder.Services.AddScoped<PasswordResetService>();
+
 
 
 var app = builder.Build();

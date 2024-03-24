@@ -17,6 +17,13 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Azure.Core;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Razor;
+using prjTravelPlatformV3.Areas.Employee.Controllers.Airline;
+using Org.BouncyCastle.Ocsp;
 
 
 namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
@@ -27,11 +34,11 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
     {
 
         private readonly dbTravalPlatformContext _context;
-        private readonly IEmailSender _emailSender;
-        public FlightApiController(dbTravalPlatformContext context, IEmailSender emailSender)
+        private ICompositeViewEngine _viewEngine;
+        public FlightApiController(dbTravalPlatformContext context, ICompositeViewEngine viewEngine)
         {
             _context = context;
-            _emailSender = emailSender;
+            _viewEngine = viewEngine;
         }
 
 
@@ -316,7 +323,7 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                         };
 
                         _context.TForderDetails.Add(outgoingOrderDetail);
-                        _context.TForderDetails.Add(returnOrderDetail); 
+                        _context.TForderDetails.Add(returnOrderDetail);
                         #endregion
 
                         // 更新訂單總金額
@@ -347,34 +354,6 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                     await _context.SaveChangesAsync();
                     transaction.Commit();
 
-                    #region 寄送訂單確認信
-
-                    //重新從資料庫提取一次建立的order跟去回程(設定同時回傳的關聯屬性)
-                    var orderInfo = _context.TForders.Where(o => o.FOrderId == order.FOrderId).Include(o => o.FMember).FirstOrDefault();
-                    var outgoingFlightScheduleInfo = _context.TFflightSchedules.Where(o => o.FScheduleId == model.OutgoingScheduleId).Include(o=>o.FDeparture).Include(r=>r.FDestination).FirstOrDefault();
-                    var returnFlightScheduleInfo = _context.TFflightSchedules.Where(r => r.FScheduleId == model.ReturnScheduleId).FirstOrDefault();
-                    Console.WriteLine(orderInfo.FMember.FName);
-                    //處理顯示參數
-                    string phoneForEmail = orderInfo.FMember.FPhone;
-                    string totalForEmail = ((int)orderInfo.FTotal).ToString("0");
-
-                    // 客戶信箱
-                    string customerEmail = model.CustomerEmail;
-
-                    // 設置郵件內容
-                    string subject = $"【TravVita】訂單號 {orderInfo.FOrderId} 已成立!";  // 主旨
-                    string message = $"<p><span style=\"font-size:14px\">親愛的會員，您的訂單號<span style=\"color:#3498db\"> <strong>{orderInfo.FOrderId}</strong></span>已成立！</span></p>\r\n"; // 內文
-                    message += $"<p><span style=\"font-size:14px\">行程如下，請確認：</span></p><hr />";
-                    message += $"<h4><strong>【訂購人資料】</strong></h4>\r\n<p>訂購會員姓名：{orderInfo.FMember.FName}</p>\r\n<p>訂單日期：{orderInfo.FOrderDate}</p>\r\n<p>電話：{phoneForEmail}</p>\r\n<p>總金額：{totalForEmail}</p>";
-                    message += $"<h4><strong>【行程資料-來回】</strong></h4>";
-                    message += $"<p>{outgoingFlightScheduleInfo.FDeparture.FAirport}　直達　{outgoingFlightScheduleInfo.FDestination.FAirport}</p>";
-                    message += $"<p>去程</p>\r\n<p>起飛時間：{outgoingFlightScheduleInfo.FDepartureTime}</p>\r\n<p>降落時間：{outgoingFlightScheduleInfo.FArrivalTime}</p>";
-                    message += $"<p>回程</p>\r\n<p>起飛時間：{returnFlightScheduleInfo.FDepartureTime} </p>\r\n<p>降落時間：{returnFlightScheduleInfo.FArrivalTime}</p>\r\n";
-                    message += $"<hr /><p>感謝您使用TravVita服務，有任何問題歡迎隨時與我們聯繫。</p>";
-                    // 使用郵件發送者來發送郵件
-                    await _emailSender.SendEmailAsync(customerEmail, subject, message); 
-                    #endregion
-
                     //回傳訂單編號
                     return Ok(new { OrderId = orderId });
                 }
@@ -385,6 +364,8 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                 }
             }
         }
+
+        
 
         //路徑：~/api/flightapi/Confirm
         //訂單確認畫面資訊
@@ -422,7 +403,7 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                 if (order == null)
                 {
                     return NotFound();
-                } 
+                }
                 #endregion
 
                 #region 去程資料處理
@@ -476,6 +457,31 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                     ReturnFlightDetail = returnFlightDetail,
                 };
 
+                #region 寄送訂單確認信
+                //處理顯示參數
+                string phoneForEmail = order.FPhone;
+                string totalForEmail = ((int)order.FTotal).ToString("0");
+
+                // 客戶信箱
+                string customerEmail = order.FEmail;
+
+                // 設置郵件內容
+                string subject = $"【TravVita】訂單號 {order.FOrderId} 已成立!";  // 主旨
+                string message = $"<p><span style=\"font-size:14px\">親愛的會員，您的訂單號<span style=\"color:#3498db\"> <strong>{order.FOrderId}</strong></span>已成立！</span></p>\r\n"; // 內文
+                message += $"<p><span style=\"font-size:14px\">行程如下，請確認：</span></p><hr />";
+                message += $"<h4><strong>【訂購人資料】</strong></h4>\r\n<p>訂購會員姓名：{order.FName}</p>\r\n<p>訂單日期：{order.FOrderDate}</p>\r\n<p>電話：{phoneForEmail}</p>\r\n<p>總金額：{totalForEmail}</p>";
+                message += $"<h4><strong>【行程資料-來回】</strong></h4>";
+                message += $"<p>{outgoingFlightDetail.FDeparture.FAirport}　直達　{outgoingFlightDetail.FDestination.FAirport}</p>";
+                message += $"<p>去程</p>\r\n<p>起飛時間：{outgoingFlightDetail.FDepartureTime}</p>\r\n<p>降落時間：{outgoingFlightDetail.FArrivalTime}</p>";
+                message += $"<p>回程</p>\r\n<p>起飛時間：{returnFlightDetail.FDepartureTime} </p>\r\n<p>降落時間：{returnFlightDetail.FArrivalTime}</p>\r\n";
+                message += $"<hr /><p>感謝您使用TravVita服務，有任何問題歡迎隨時與我們聯繫。</p>";
+                message += $"<a href='https://localhost:7119/Customer/Userprofile'><span>點擊連結確認訂單細節內容</span></a>";
+                // 使用郵件發送者來發送郵件
+                EmailSender mailsend = new EmailSender();
+                await mailsend.SendEmailAsync(customerEmail, subject, message); 
+                #endregion
+
+
                 // 返回 JSON
                 return Ok(response);
             }
@@ -485,7 +491,32 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                 return StatusCode(500, "Internal server error");
             }
         }
+        //private async Task<string> RenderPartialViewToString(string viewName, object model)
+        //{
+        //    if (string.IsNullOrEmpty(viewName))
+        //        viewName = ControllerContext.ActionDescriptor.ActionName;
 
+        //    ViewData.Model = model;
+
+        //    using (var writer = new StringWriter())
+        //    {
+        //        ViewEngineResult viewResult =
+        //            _viewEngine.FindView(ControllerContext, viewName, false);
+
+        //        ViewContext viewContext = new ViewContext(
+        //            ControllerContext,
+        //            viewResult.View,
+        //        ViewData,
+        //            TempData,
+        //            writer,
+        //            new HtmlHelperOptions()
+        //        );
+
+        //        await viewResult.View.RenderAsync(viewContext);
+
+        //        return writer.GetStringBuilder().ToString();
+        //    }
+        //}
 
     }
 }

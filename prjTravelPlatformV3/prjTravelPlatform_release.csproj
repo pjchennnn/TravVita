@@ -170,7 +170,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Customer\Controllers\Airline\" />
     <Folder Include="Areas\Customer\Controllers\CarRent\" />
     <Folder Include="Areas\Customer\Controllers\CarRent\" />
     <Folder Include="Areas\Customer\Controllers\Customer\" />
