@@ -1,0 +1,1490 @@
+﻿@model prjTravelPlatformV3.Models.TCustomer
+@{
+    ViewData["Title"] = "會員";
+}
+@{
+    // 在Razor代碼中將ViewBag.UserImage的值保存到JavaScript變數
+    string userImageUrl = string.IsNullOrEmpty(ViewBag.UserImage) ? "~/img/userprofile/user.png" : "~/" + ViewBag.UserImage;
+
+            // string userImageUrl = "~"+"/"+ViewBag.UserImage;
+}
+
+<style>
+    .scroll-bar-1::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    .scroll-bar-1::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+    }
+    .overflow-scroll {
+        overflow: scroll !important;
+    }
+    .modal {
+  position: fixed;
+  top: 20%;
+  left: 30%;
+  z-index: 1055;
+  display: none;
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
+}
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: translate(0, -50px);
+}
+.modal.show .modal-dialog {
+  transform: none;
+}
+.modal.modal-static .modal-dialog {
+  transform: scale(1.02);
+}
+
+.modal-dialog-scrollable {
+  height: calc(100% - 1rem);
+}
+.modal-dialog-scrollable .modal-content {
+  max-height: 100%;
+  overflow: hidden;
+}
+.modal-dialog-scrollable .modal-body {
+  overflow-y: auto;
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
+
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+}
+.modal-backdrop.fade {
+  opacity: 0;
+}
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+.modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+}
+.modal-header .btn-close {
+  padding: 0.5rem 0.5rem;
+  margin: -0.5rem -0.5rem -0.5rem auto;
+}
+
+.modal-title {
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: calc(0.3rem - 1px);
+  border-bottom-left-radius: calc(0.3rem - 1px);
+}
+.modal-footer > * {
+  margin: 0.25rem;
+}
+    #a1 {
+        margin-top: 90px;
+        margin-bottom: 40px;
+        min-height: 61vh;
+        padding-top: 20px;
+        background-color: #f5f5f5;
+    }
+
+    #a2 {
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 6px;
+        margin-bottom: 15px;
+    }
+
+    #a3 {
+        list-style: none;
+        padding-left: 0;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-top: 15px;
+        line-height: 3;
+        margin-bottom: 15px;
+    }
+
+    .editor-logo {
+        border-radius: 50%;
+        border: 1px solid #eee;
+        text-align: center;
+        background-color: #eaeaea;
+        background-size: cover;
+        background-position: 50%;
+        position: relative;
+        overflow: visible;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+    }
+
+    .fa.fa-camera {
+        display: inline-block;
+        font: normal normal normal 14px / 1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        font-size: 1.8rem;
+        background-color: #fff;
+        border-radius: 50%;
+        padding: 4px;
+        width: 28px;
+        height: 28px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    #hh4 {
+        display: block;
+        margin-block-start: 1.33em;
+        margin-block-end: 1.33em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        color: inherit;
+        margin-top: 10px;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 1.6rem;
+        line-height: 1.7;
+        margin-bottom: 4px;
+        text-align: center !important;
+        border-bottom: 1px solid #DDDDDD
+    }
+
+    ul li {
+        cursor: pointer;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+        user-select: none;
+    }
+
+    .activebb {
+        color: dodgerblue
+    }
+
+    .size {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    .current-page {
+        box-sizing: border-box;
+        border-radius: 100%;
+        background-color: #0d6efd !important;
+        color: white;
+    }
+
+    .edit-button{
+        color: #2f4f4f;
+        ;
+        background-color: #F5F5F5;
+        border: none;
+        border-radius: 4px;
+        padding: 1px 2px;
+    }
+
+    .delete-button{
+        margin-left:2px;
+        color: #2f4f4f;
+        background-color: #F5F5F5;
+        border: none;
+        border-radius: 4px;
+        padding: 1px 2px;
+    }
+
+    .btn.btn-primary{
+        background-color: #2f4f4f;
+    }
+    .btn.disabled-button {
+        background-color: #ccc; /* 设置灰色背景色 */
+        color: #333; /* 设置按钮文字颜色 */
+    }
+</style>
+<section data-v-74d308bd="" id="a1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <aside class="page-aside">
+                    <div id="a2" class="pl-20">
+                        <div>
+                            <div class="editor-logo">
+                                <img id="UserImage" src="@Url.Content(userImageUrl)" style="width:118px; height:118px; border-radius:50%" />
+                                <label for="avatar">
+                                    <i data-toggle="tooltip" data-placement="bottom" data-container="body" title="" class="fa fa-camera" data-original-title="Allowed max size of image: 1M"></i>
+                                </label>
+                            </div>
+                            <span class="file-uploads file-uploads-html5 file-uploads-drop" style="display: none">
+                                <label for="avatar"></label>
+                                <input type="file" name="avatar" id="avatar" onchange="uploadImage(this)" style="display: none">
+                            </span>
+                            <div id="avatar-edit" role="dialog" class="modal fade" style="display: none;"><!----></div>
+                        </div>
+                        <h4 id="hh4" class="break-word">@ViewBag.USerName</h4>
+                        <div class="account-group">
+                            <div class="account">
+                                <img src="~/img/logo.png" class="channel-icon"> <div class="channel-name">
+                                    <div>
+                                        travel 會員
+                                    </div>
+                                    <div class="channel-login-id text-xs">
+                                        @ViewBag.UserEmail
+                                    </div>
+                                </div> <!---->
+                            </div>
+                            <div class="account"></div>
+                        </div>
+                    </div>
+
+                    <ul id="a3" class="pl-20">
+                        <li class="list-item">
+                            <button>
+                                <img src="~/img/userprofile/settings.png" alt="image" class="mr-15">
+                                <span id="1" class="list-item-title" onclick="">帳號設定</span>
+                            </button>
+
+
+                        </li>
+                        <li class="list-item">
+                            <a class="btn-click">
+                                <img src="~/img/userprofile/voucher.png" alt="image" class="mr-15" />
+                                <span id="2" class="list-item-title">TravelVita優惠券</span>
+                            </a>
+                        </li>
+                        <li class="list-item">
+                            <a data-gtm-name="member-menu-item" class="btn-click">
+                                <img src="~/img/userprofile/lists.png" alt="image" class="mr-15" />
+                                <span id="3" class="list-item-title" onclick="">我的訂單</span>
+                            </a>
+                        </li>
+                        <li class="list-item">
+                            <a data-gtm-item-type="Mission" data-gtm-name="member-menu-item" class="btn-click">
+                                <img src="~/img/userprofile/product-review.png" alt="image" class="mr-15" />
+                                <span id="4" class="list-item-title">我的評價</span>
+                            </a>
+                        </li>
+                        <li class="list-item">
+                            <a data-gtm-name="member-menu-item" class="btn-click">
+                                <img src="~/img/userprofile/love.png" alt="image" class="mr-15" />
+                                <span id="5" class="list-item-title" onclick="test(5)">我的收藏</span>
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+
+            <div class="col-md-9" id="xxx">
+                <div>
+                    <div id="aa1" style="display:none">
+                        @await Html.PartialAsync("_UserPartial")
+                    </div>
+                    <div id="aa2" style="display:none">
+                        @* @await Html.PartialAsync("_OrderPartial") *@
+                    </div>
+                    <div id="aa3" style="display:none">
+                        @await Html.PartialAsync("_OrderPartial")
+                    </div>
+                    <div id="aa4" style="display:none">
+                        @await Html.PartialAsync("_CommentPartial")
+                    </div>
+                    <div id="aa5" style="display:none">
+                        @await Html.PartialAsync("_CollectionPartial")
+                    </div>
+                </div>
+            </div>
+
+            <!--FComment Modal-->
+            <div class="modal fade m-auto" id="FCommentPartial" tabindex=" -1" aria-labelledby="FCommentPartial" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div id="FCommentBody" class="modal-body">
+                            <!--引入 ModalPartial-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                            <button id="CommentSaveBtn" type="button" class="btn btn-primary">儲存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--FOrderDetail Modal-->
+            <div class="modal fade m-auto" id="FOrderDetailPartial" tabindex=" -1" style="max-width: 1000px;" aria-labelledby="FOrderDetailPartial" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div id="FOrderDetailBody" class="modal-body">
+                            <!--引入 ModalPartial-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+
+
+        // $('#1').on("click", () => {
+        //     hidee();
+        //     hideActive('#1');
+        //     $('#aa1').toggle();
+        //     $('#1').addClass('activebb');
+        // })
+        $('#2').on("click", () => {
+            hidee();
+            hideActive('#2');
+            $('#aa2').toggle();
+            $('#2').addClass('activebb');
+        })
+        // $('#3').on("click", () => {
+        //     hidee();
+        //     hideActive('#3');
+        //     $('#aa3').toggle();
+        //     $('#3').addClass('activebb');
+        // })
+        $('#4').on("click", () => {
+            hidee();
+            hideActive('#4');
+            $('#aa4').toggle();
+            $('#4').addClass('activebb');
+
+        })
+        $('#5').on("click", () => {
+            hidee();
+            hideActive('#5');
+            $('#aa5').toggle();
+            $('#5').addClass('activebb');
+        })
+
+        function hidee() {
+            $('#aa1').hide();
+            $('#aa2').hide();
+            $('#aa3').hide();
+            $('#aa4').hide();
+            $('#aa5').hide();
+        }
+
+
+        function hideActive() {
+            $('.activebb').removeClass('activebb');
+        }
+
+
+
+        $('#1').on('click', function () {
+            var userId = $(this).find('span').attr('id');
+            $.ajax({
+                url: '/Customer/Userprofile/GetUserProfile',
+                type: 'GET',
+                success: function (data) {
+                    console.log(data)
+
+                    var formattedBirthDate = new Date(data.fBirth).toISOString().slice(0, 10);
+
+                    // 將資料設置到 input 欄位中
+                    $('#userid').val(data.fCustomerId);
+                    $('#username').val(data.fName);
+                    $('#useremail').val(data.fEmail);
+                    $('#usergender').val(data.fGender);
+                    $('#useraddress').val(data.fAddress);
+                    $('#userphone').val(data.fPhone);
+                    $('#userbirth').val(formattedBirthDate);
+                    hidee();
+                    hideActive('#1');
+                    $('#aa1').toggle();
+                    $('#1').addClass('activebb');
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+
+        //修改會員資料
+
+        $('#datasave').on('click', async function () {
+            // 获取要发送的用户数据
+            var userData = {
+                FCustomerId: $('#userid').val(),
+                FName: $('#username').val(),
+                FEmail: $('#useremail').val(),
+                FGender: $('#usergender').val(),
+                FAddress: $('#useraddress').val(),
+                FBirth: $('#userbirth').val(),
+                FPhone: $('#userphone').val()
+            };
+            console.log(userData);
+            const res = await fetch(`@Url.Content("~/Customer/Userprofile/SaveUserData")`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            // 处理服务器响应
+            if (res.ok) {
+                // 请求成功
+                const data = await res.json();
+                Swal.fire({
+                    title: "Success",
+                    text: data.message,
+                    icon: "success"
+                });
+                console.log(data);
+            } else {
+                // 请求失败
+                console.error('Failed to save user data');
+            }
+        });
+
+
+        //修改會員密碼
+        async function changePassword() {
+            var userpassword = document.getElementById("userpassword").value;
+            var usernewpassword = document.getElementById("usernewpassword").value;
+            var usernewpasswordcheck = document.getElementById("usernewpasswordcheck").value;
+
+            // 检查原密码是否为空
+            if (!userpassword) {
+                document.getElementById("originalPasswordError").style.display = "inline";
+                return;
+            } else {
+                document.getElementById("originalPasswordError").style.display = "none";
+            }
+
+            // 检查新密码是否为空
+            if (!usernewpassword) {
+                document.getElementById("passwordError").innerText = "請輸入密碼";
+                document.getElementById("passwordError").style.display = "inline";
+                return;
+            } else {
+                document.getElementById("passwordError").style.display = "none";
+            }
+
+            // 检查新密码与原密码是否相同
+            if (userpassword === usernewpassword) {
+                document.getElementById("passwordError").innerText = "修改密碼不能與原本密碼相同";
+                document.getElementById("passwordError").style.display = "inline";
+                return;
+            } else {
+                document.getElementById("passwordError").style.display = "none";
+            }
+
+            // 检查新密码是否符合要求的格式
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{1,16}$/;
+            if (!passwordRegex.test(usernewpassword)) {
+                document.getElementById("passwordError").innerText = "密碼需包含至少一個大寫字母、一個小寫字母和一個數字，且不超過16個字符";
+                document.getElementById("passwordError").style.display = "inline";
+                return;
+            } else {
+                document.getElementById("passwordError").style.display = "none";
+            }
+
+            // 检查确认密码是否为空
+            if (!usernewpasswordcheck) {
+                document.getElementById("passwordMatchError").innerText = "請再次輸入修改密碼";
+                document.getElementById("passwordMatchError").style.display = "inline";
+                return;
+            } else {
+                document.getElementById("passwordMatchError").style.display = "none";
+            }
+
+
+
+            // 检查新密码和确认新密码是否一致
+            if (usernewpassword !== usernewpasswordcheck) {
+                document.getElementById("passwordMatchError").innerText = "與修改密碼不一致";
+                document.getElementById("passwordMatchError").style.display = "inline";
+                return;
+            } else {
+                document.getElementById("passwordMatchError").style.display = "none";
+            }
+
+            // 使用 fetch 发送 POST 请求到后端处理修改密码的动作
+            try {
+                const response = await fetch("/Customer/Userprofile/ChangePassword", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userpassword: userpassword,
+                        usernewpassword: usernewpassword,
+                        usernewpasswordcheck: usernewpasswordcheck
+                    })
+                });
+
+                if (!response.ok) {
+                    const responseData = await response.text(); // 获取响应的文本数据
+                    Swal.fire({
+                        title: "Error",
+                        text: "密碼修改失敗: " + responseData,
+                        icon: "error"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Success",
+                        text: "密碼修改成功",
+                        icon: "success"
+                    });
+                    // 清空输入字段
+                    document.getElementById("userpassword").value = "";
+                    document.getElementById("usernewpassword").value = "";
+                    document.getElementById("usernewpasswordcheck").value = "";
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+
+        // 上傳圖片
+        function uploadImage(input) {
+            if (input.files && input.files[0]) {
+                var formData = new FormData();
+                formData.append("avatar", input.files[0]);
+
+                $.ajax({
+                    url: '/Customer/Userprofile/UploadImage', // 后端处理上传图片的接口地址
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        console.log('Image uploaded successfully:', data);
+                        $('#UserImage').attr('src', data.imageUrl);
+                    },
+                    error: function (error) {
+                        console.error('Error uploading image:', error);
+                    }
+                });
+            }
+        }
+
+        const tableBody = document.querySelector('#hotelOrders tbody');
+
+        // $('#3').on('click', function () {
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '/Customer/Userprofile/GetHotelOrder',
+        //         success: function (data) {
+        //             console.log(data);
+        //             if (data) {
+        //                 // 清空表格內容
+        //                 tableBody.innerHTML = '';
+
+        //                 // 遍歷返回的資料，將每條資料填充到表格中
+        //                 data.forEach(order => {
+        //                     const horderNumber = order.horderNumber;
+        //                     const firstLine = horderNumber.substring(0, 9);
+        //                     const secondLine = horderNumber.substring(9);
+
+        //                     const row = `
+        //                         <tr>
+        //                             <td class="lh-16">${firstLine}<br>${secondLine}</td>
+        //                             <td>${order.hotelName}</td>
+        //                             <td class="lh-16">${order.checkInDate}</td>
+        //                             <td>${order.roomType}</td>
+        //                             <td>${order.roomCount}</td>
+        //                             <td>${order.totalAmount}</td>
+        //                         </tr>
+        //                     `;
+        //                     tableBody.innerHTML += row;
+        //                 });
+
+        //                 // 隱藏與顯示元素
+        //                 hidee();
+        //                 hideActive('#3');
+        //                 $('#aa3').toggle();
+        //                 $('#3').addClass('activebb');
+        //             } else {
+        //                 // 如果沒有資料，可能要顯示一些提示訊息
+        //                 console.log(0);
+        //             }
+        //         },
+        //         error: function () {
+        //             // 處理錯誤
+        //         }
+        //     });
+        // });
+        $('#3').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Customer/Userprofile/GetDestinationOrder',
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        // 清空表格內容
+                        dtableBody.innerHTML = '';
+
+                        // 每頁顯示的記錄數
+                        const pageSize = 4;
+
+                        // 計算總頁數
+                        const totalPages = Math.ceil(data.length / pageSize);
+
+                        // 當前頁碼
+                        let currentPage = 1;
+
+                        // 顯示指定頁碼的資料
+                        function showPage(page) {
+                            // 清空表格內容
+                            dtableBody.innerHTML = '';
+
+                            // 計算起始索引和結束索引
+                            const startIndex = (page - 1) * pageSize;
+                            const endIndex = Math.min(startIndex + pageSize, data.length);
+
+                            // 顯示指定範圍的資料
+                            for (let i = startIndex; i < endIndex; i++) {
+                                const order = data[i];
+
+                                const row = `
+                                                            <tr>
+                                                                <td class="lh-16">${order.destinationDate}</td>
+                                                                <td>${order.destinationName}</td>
+                                                                <td class="lh-16">${order.destinationQty}</td>
+                                                                <td>${order.destinationPrice}</td>
+
+                                                            </tr>
+                                                        `;
+                                dtableBody.innerHTML += row;
+                            }
+                        }
+
+                        // 顯示第一頁
+                        showPage(currentPage);
+
+                        // 顯示分頁按鈕
+                        const paginationButtons = document.getElementById('paginationButtons');
+                        paginationButtons.style.display = 'flex';
+                        paginationButtons.style.justifyContent = 'center';
+                        paginationButtons.innerHTML = ''; // 清空原有的按鈕
+
+                        for (let i = 1; i <= totalPages; i++) {
+                            const button = document.createElement('button');
+                            button.textContent = i;
+                            button.classList.add('size'); // 添加 size class
+                            button.onclick = function () {
+                                currentPage = i;
+                                showPage(currentPage);
+                                highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                            };
+                            button.style.marginRight = '30px'; // 設置右邊距
+                            if (i === currentPage) {
+                                button.classList.add('current-page'); // 添加 current-page class
+                            }
+                            paginationButtons.appendChild(button);
+                        }
+
+                        // 上一頁按鈕
+                        document.getElementById('prevPage').onclick = function () {
+                            if (currentPage > 1) {
+                                currentPage--;
+                                showPage(currentPage);
+                                highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                            }
+                        };
+
+                        // 下一頁按鈕
+                        document.getElementById('nextPage').onclick = function () {
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                                showPage(currentPage);
+                                highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                            }
+                        };
+
+                        // 突顯當前分頁的按鈕函數
+                        function highlightCurrentPageButton() {
+                            const buttons = document.querySelectorAll('#paginationButtons button');
+                            buttons.forEach((button, index) => {
+                                if (index + 1 === currentPage) {
+                                    button.classList.add('current-page');
+                                } else {
+                                    button.classList.remove('current-page');
+                                }
+                            });
+                        }
+                    } else {
+                        // 如果沒有資料，可能要顯示一些提示訊息
+                        console.log(0);
+                    }
+                },
+                error: function () {
+                    // 處理錯誤
+                }
+            });
+            $('#destinationbtn').on('click', function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Customer/Userprofile/GetDestinationOrder',
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            // 清空表格內容
+                            dtableBody.innerHTML = '';
+
+                            // 每頁顯示的記錄數
+                            const pageSize = 4;
+
+                            // 計算總頁數
+                            const totalPages = Math.ceil(data.length / pageSize);
+
+                            // 當前頁碼
+                            let currentPage = 1;
+
+                            // 顯示指定頁碼的資料
+                            function showPage(page) {
+                                // 清空表格內容
+                                dtableBody.innerHTML = '';
+
+                                // 計算起始索引和結束索引
+                                const startIndex = (page - 1) * pageSize;
+                                const endIndex = Math.min(startIndex + pageSize, data.length);
+
+                                // 顯示指定範圍的資料
+                                for (let i = startIndex; i < endIndex; i++) {
+                                    const order = data[i];
+
+                                    const row = `
+                                                                    <tr>
+                                                                        <td class="lh-16">${order.destinationDate}</td>
+                                                                        <td>${order.destinationName}</td>
+                                                                        <td class="lh-16">${order.destinationQty}</td>
+                                                                        <td>${order.destinationPrice}</td>
+
+                                                                    </tr>
+                                                                `;
+                                    dtableBody.innerHTML += row;
+                                }
+                            }
+
+                            // 顯示第一頁
+                            showPage(currentPage);
+
+                            // 顯示分頁按鈕
+                            const paginationButtons = document.getElementById('paginationButtons');
+                            paginationButtons.style.display = 'flex';
+                            paginationButtons.style.justifyContent = 'center';
+                            paginationButtons.innerHTML = ''; // 清空原有的按鈕
+
+                            for (let i = 1; i <= totalPages; i++) {
+                                const button = document.createElement('button');
+                                button.textContent = i;
+                                button.classList.add('size'); // 添加 size class
+                                button.onclick = function () {
+                                    currentPage = i;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                };
+                                button.style.marginRight = '30px'; // 設置右邊距
+                                if (i === currentPage) {
+                                    button.classList.add('current-page'); // 添加 current-page class
+                                }
+                                paginationButtons.appendChild(button);
+                            }
+
+                            // 上一頁按鈕
+                            document.getElementById('prevPage').onclick = function () {
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 下一頁按鈕
+                            document.getElementById('nextPage').onclick = function () {
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 突顯當前分頁的按鈕函數
+                            function highlightCurrentPageButton() {
+                                const buttons = document.querySelectorAll('#paginationButtons button');
+                                buttons.forEach((button, index) => {
+                                    if (index + 1 === currentPage) {
+                                        button.classList.add('current-page');
+                                    } else {
+                                        button.classList.remove('current-page');
+                                    }
+                                });
+                            }
+                        } else {
+                            // 如果沒有資料，可能要顯示一些提示訊息
+                            console.log(0);
+                        }
+                    },
+                    error: function () {
+                        // 處理錯誤
+                    }
+                });
+            });
+            $('#hotelbtn').on('click', function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Customer/Userprofile/GetHotelOrder',
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            // 清空表格內容
+                            htableBody.innerHTML = '';
+
+                            // 每頁顯示的記錄數
+                            const pageSize = 4;
+
+                            // 計算總頁數
+                            const totalPages = Math.ceil(data.length / pageSize);
+
+                            // 當前頁碼
+                            let currentPage = 1;
+
+                            // 顯示指定頁碼的資料
+                            function showPage(page) {
+                                // 清空表格內容
+                                htableBody.innerHTML = '';
+
+                                // 計算起始索引和結束索引
+                                const startIndex = (page - 1) * pageSize;
+                                const endIndex = Math.min(startIndex + pageSize, data.length);
+
+                                // 顯示指定範圍的資料
+                                for (let i = startIndex; i < endIndex; i++) {
+                                    const order = data[i];
+                                    const totalAmount = order.totalAmount || '';
+                                    const firstLine = totalAmount.substring(0, 3); // 取前三個字
+                                    const secondLine = totalAmount.substring(3); // 取第四個字之後的所有字串
+                                    const row = `
+                                            <tr>
+                                                <td class="lh-16">${order.horderDate}</td>
+                                                <td>${order.hotelName}</td>
+                                                <td class="lh-16">${order.checkInDate}</td>
+                                                <td>${order.roomType}</td>
+                                                <td>${order.roomCount}</td>
+                                                <td>${firstLine}<br>${secondLine}</td>
+                                            </tr>
+                                        `;
+                                    htableBody.innerHTML += row;
+                                }
+                            }
+
+                            // 顯示第一頁
+                            showPage(currentPage);
+
+                            // 顯示分頁按鈕
+                            const paginationButtons = document.getElementById('paginationButtons');
+                            paginationButtons.style.display = 'flex';
+                            paginationButtons.style.justifyContent = 'center';
+                            paginationButtons.innerHTML = ''; // 清空原有的按鈕
+
+                            for (let i = 1; i <= totalPages; i++) {
+                                const button = document.createElement('button');
+                                button.textContent = i;
+                                button.classList.add('size'); // 添加 size class
+                                button.onclick = function () {
+                                    currentPage = i;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                };
+                                button.style.marginRight = '30px'; // 設置右邊距
+                                if (i === currentPage) {
+                                    button.classList.add('current-page'); // 添加 current-page class
+                                }
+                                paginationButtons.appendChild(button);
+                            }
+
+                            // 上一頁按鈕
+                            document.getElementById('prevPage').onclick = function () {
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 下一頁按鈕
+                            document.getElementById('nextPage').onclick = function () {
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 突顯當前分頁的按鈕函數
+                            function highlightCurrentPageButton() {
+                                const buttons = document.querySelectorAll('#paginationButtons button');
+                                buttons.forEach((button, index) => {
+                                    if (index + 1 === currentPage) {
+                                        button.classList.add('current-page');
+                                    } else {
+                                        button.classList.remove('current-page');
+                                    }
+                                });
+                            }
+                        } else {
+                            // 如果沒有資料，可能要顯示一些提示訊息
+                            console.log(0);
+                        }
+                    },
+                    error: function () {
+                        // 處理錯誤
+                    }
+                });
+            });
+            $('#freebtn').on('click', function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Customer/Userprofile/GetFreeOrder',
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            // 清空表格內容
+                            freetableBody.innerHTML = '';
+
+                            // 每頁顯示的記錄數
+                            const pageSize = 4;
+
+                            // 計算總頁數
+                            const totalPages = Math.ceil(data.length / pageSize);
+
+                            // 當前頁碼
+                            let currentPage = 1;
+
+                            // 顯示指定頁碼的資料
+                            function showPage(page) {
+                                // 清空表格內容
+                                freetableBody.innerHTML = '';
+
+                                // 計算起始索引和結束索引
+                                const startIndex = (page - 1) * pageSize;
+                                const endIndex = Math.min(startIndex + pageSize, data.length);
+
+                                // 顯示指定範圍的資料
+                                for (let i = startIndex; i < endIndex; i++) {
+                                    const order = data[i];
+                                    
+                                    const row = `
+                                                    <tr>
+                                                        <td class="lh-16">${order.freeDate}</td>
+                                                        <td>自由行</td>
+                                                        <td class="lh-16">${order.freeQty}</td>
+                                                        <td>${order.freePrice}</td>
+                                                    </tr>
+                                                `;
+                                    freetableBody.innerHTML += row;
+                                }
+                            }
+
+                            // 顯示第一頁
+                            showPage(currentPage);
+
+                            // 顯示分頁按鈕
+                            const paginationButtons = document.getElementById('paginationButtons');
+                            paginationButtons.style.display = 'flex';
+                            paginationButtons.style.justifyContent = 'center';
+                            paginationButtons.innerHTML = ''; // 清空原有的按鈕
+
+                            for (let i = 1; i <= totalPages; i++) {
+                                const button = document.createElement('button');
+                                button.textContent = i;
+                                button.classList.add('size'); // 添加 size class
+                                button.onclick = function () {
+                                    currentPage = i;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                };
+                                button.style.marginRight = '30px'; // 設置右邊距
+                                if (i === currentPage) {
+                                    button.classList.add('current-page'); // 添加 current-page class
+                                }
+                                paginationButtons.appendChild(button);
+                            }
+
+                            // 上一頁按鈕
+                            document.getElementById('prevPage').onclick = function () {
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 下一頁按鈕
+                            document.getElementById('nextPage').onclick = function () {
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 突顯當前分頁的按鈕函數
+                            function highlightCurrentPageButton() {
+                                const buttons = document.querySelectorAll('#paginationButtons button');
+                                buttons.forEach((button, index) => {
+                                    if (index + 1 === currentPage) {
+                                        button.classList.add('current-page');
+                                    } else {
+                                        button.classList.remove('current-page');
+                                    }
+                                });
+                            }
+                        } else {
+                            // 如果沒有資料，可能要顯示一些提示訊息
+                            console.log(0);
+                        }
+                    },
+                    error: function () {
+                        // 處理錯誤
+                    }
+                });
+            });
+            $('#visabtn').on('click', function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Customer/Userprofile/GetVisaOrder',
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            // 清空表格內容
+                            visatablebody.innerHTML = '';
+
+                            // 每頁顯示的記錄數
+                            const pageSize = 4;
+
+                            // 計算總頁數
+                            const totalPages = Math.ceil(data.length / pageSize);
+
+                            // 當前頁碼
+                            let currentPage = 1;
+
+                            // 顯示指定頁碼的資料
+                            function showPage(page) {
+                                // 清空表格內容
+                                visatablebody.innerHTML = '';
+
+                                // 計算起始索引和結束索引
+                                const startIndex = (page - 1) * pageSize;
+                                const endIndex = Math.min(startIndex + pageSize, data.length);
+
+                                // 顯示指定範圍的資料
+                                for (let i = startIndex; i < endIndex; i++) {
+                                    const order = data[i];
+
+                                    const row = `
+                                                            <tr>
+                                                                <td class="lh-16">${order.vorderdate}</td>
+                                                                <td>${order.vordername}</td>
+                                                                <td class="lh-16">${order.vordercount}</td>
+                                                                <td>${order.vorderprice}</td>
+                                                                <td>${order.vorderstatus}</td>
+                                                                <td style="display: flex;">
+                                                                    <button class="edit-button">結帳</button>
+                                                                    <button class="delete-button">取消</button>
+                                                                </td>
+                                                            </tr>
+                                                        `;
+                                    visatablebody.innerHTML += row;
+                                }
+                            }
+
+                            // 顯示第一頁
+                            showPage(currentPage);
+
+                            // 顯示分頁按鈕
+                            const paginationButtons = document.getElementById('paginationButtons');
+                            paginationButtons.style.display = 'flex';
+                            paginationButtons.style.justifyContent = 'center';
+                            paginationButtons.innerHTML = ''; // 清空原有的按鈕
+
+                            for (let i = 1; i <= totalPages; i++) {
+                                const button = document.createElement('button');
+                                button.textContent = i;
+                                button.classList.add('size'); // 添加 size class
+                                button.onclick = function () {
+                                    currentPage = i;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                };
+                                button.style.marginRight = '30px'; // 設置右邊距
+                                if (i === currentPage) {
+                                    button.classList.add('current-page'); // 添加 current-page class
+                                }
+                                paginationButtons.appendChild(button);
+                            }
+
+                            // 上一頁按鈕
+                            document.getElementById('prevPage').onclick = function () {
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 下一頁按鈕
+                            document.getElementById('nextPage').onclick = function () {
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    showPage(currentPage);
+                                    highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                                }
+                            };
+
+                            // 突顯當前分頁的按鈕函數
+                            function highlightCurrentPageButton() {
+                                const buttons = document.querySelectorAll('#paginationButtons button');
+                                buttons.forEach((button, index) => {
+                                    if (index + 1 === currentPage) {
+                                        button.classList.add('current-page');
+                                    } else {
+                                        button.classList.remove('current-page');
+                                    }
+                                });
+                            }
+                        } else {
+                            // 如果沒有資料，可能要顯示一些提示訊息
+                            console.log(0);
+                        }
+                    },
+                    error: function () {
+                        // 處理錯誤
+                    }
+                });
+            });
+            $('#flightbtn').on('click', function () {
+                loadFlightOrder();
+            });
+            hidee();
+            hideActive('#3');
+            $('#aa3').toggle();
+            $('#3').addClass('activebb');
+        });
+
+        const loadFlightOrder = function () {
+            $.ajax({
+                type: 'GET',
+                url: '/Customer/Userprofile/GetFlightOrder',
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        // 清空表格內容
+                        dtableBody.innerHTML = '';
+
+                        // 每頁顯示的記錄數
+                        const pageSize = 4;
+
+                        // 計算總頁數
+                        const totalPages = Math.ceil(data.length / pageSize);
+
+                        // 當前頁碼
+                        let currentPage = 1;
+
+                        // 顯示指定頁碼的資料
+                        function showPage(page) {
+                            // 清空表格內容
+                            flighttableBody.innerHTML = '';
+
+                            // 計算起始索引和結束索引
+                            const startIndex = (page - 1) * pageSize;
+                            const endIndex = Math.min(startIndex + pageSize, data.length);
+
+                            // 顯示指定範圍的資料
+                            for (let i = startIndex; i < endIndex; i++) {
+                                const order = data[i];
+
+                                const row = `
+                                                <tr>
+                                                    <th style="display:none">${order.fid}</th>
+                                                    <th>${order.orderDate}</th>
+                                                    <th>${order.orderId}</th>
+                                                    <th>${order.orderStatus.fOrderStatus}</th>
+                                                    <th>${order.payment.fPayment}</th>
+                                                    <th>${order.orderPaymentStatus.fOrderStatus}</th>
+                                                    <th>${order.total}</th>
+                                                    <th>${order.comment}</th>
+                                                    <th><button id = "t1" type = "button" class="btn btn-primary btn-sm me-1 m-1" data-bs-toggle="modal" data-bs-target="#FOrderDetailPartial" onclick = "getOrderDetailPartial('${order.orderId}')" > <i class="fa-solid fa-solid fa-bars" style = "font-size:0.8rem;"> </i> 檢視訂單細節</button >
+                                                   <button id = "t2" type = "button" style="" class="btn btn-primary btn-sm me-1 m-1 ${order.orderStatus.fOrderStatus === "已成立" || order.orderPaymentStatus.fOrderStatus === "已成立" ? "" : "disabled-button"}" data-bs-toggle="modal" data-bs-target="#FCommentPartial" onclick = "openModalWithComment(${order.fid})" ${order.orderStatus.fOrderStatus === "已成立" || order.orderPaymentStatus.fOrderStatus === "已成立" ? "" : "disabled"}> <i class="fa-solid fa-pen-to-square" style = "font-size:0.8rem" > </i> 撰寫評論</button >
+                                                    </th>
+                                            </tr>`;
+                                flighttableBody.innerHTML += row;
+                            }
+                        }
+
+                        // 顯示第一頁
+                        showPage(currentPage);
+
+                        // 顯示分頁按鈕
+                        const paginationButtons = document.getElementById('paginationButtons');
+                        paginationButtons.style.display = 'flex';
+                        paginationButtons.style.justifyContent = 'center';
+                        paginationButtons.innerHTML = ''; // 清空原有的按鈕
+
+                        for (let i = 1; i <= totalPages; i++) {
+                            const button = document.createElement('button');
+                            button.textContent = i;
+                            button.classList.add('size'); // 添加 size class
+                            button.onclick = function () {
+                                currentPage = i;
+                                showPage(currentPage);
+                                highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                            };
+                            button.style.marginRight = '30px'; // 設置右邊距
+                            if (i === currentPage) {
+                                button.classList.add('current-page'); // 添加 current-page class
+                            }
+                            paginationButtons.appendChild(button);
+                        }
+
+                        // 上一頁按鈕
+                        document.getElementById('prevPage').onclick = function () {
+                            if (currentPage > 1) {
+                                currentPage--;
+                                showPage(currentPage);
+                                highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                            }
+                        };
+
+                        // 下一頁按鈕
+                        document.getElementById('nextPage').onclick = function () {
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                                showPage(currentPage);
+                                highlightCurrentPageButton(); // 突顯當前分頁的按鈕
+                            }
+                        };
+
+                        // 突顯當前分頁的按鈕函數
+                        function highlightCurrentPageButton() {
+                            const buttons = document.querySelectorAll('#paginationButtons button');
+                            buttons.forEach((button, index) => {
+                                if (index + 1 === currentPage) {
+                                    button.classList.add('current-page');
+                                } else {
+                                    button.classList.remove('current-page');
+                                }
+                            });
+                        }
+                    } else {
+                        // 如果沒有資料，可能要顯示一些提示訊息
+                        console.log(0);
+                    }
+                },
+                error: function () {
+                    // 處理錯誤
+                }
+            });
+        }
+
+        //取得 orderdetail partial view 
+        const getOrderDetailPartial = async (orderid) => {
+            //console.log('orderid:', orderid);
+            const response = await fetch(`/Customer/Userprofile/getOrderDetailPartial?orderid=${orderid}`);
+            const data = await response.json();
+            console.log(data);
+
+            const FOrderDetailBody = document.getElementById('FOrderDetailBody'); // 找到模態框的內容區域
+            FOrderDetailBody.innerHTML = ''; // 清空內容
+
+            let orderdetailHtml = `<h4>訂單細節</h4><hr>
+                                    <div class="">
+                                    <div class="overflow-scroll scroll-bar-1">
+                                    <table class="col-12">
+                                    <thead class="bg-light-2">
+                                        <tr>
+                                            <th>班機代碼</th>
+                                            <th>票種</th>
+                                            <th>乘客姓名</th>
+                                            <th>身分證字號</th>
+                                            <th>性別</th>
+                                            <th>生日</th>
+                                            <th>電話</th>
+                                            <th>電子郵件</th>
+                                            <th>票價</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody> `;
+            //迴圈跑出所有訂單細節
+            let row ='';
+            for (let i = 0; i < data.length; i++) {
+                const order = data[i];
+                let rowdata =`<tr class="bg-light-2">
+                    <th>${order.flightName}</th>
+                    <th>${order.ticketType.fTicketType}</th>
+                    <th>${order.psgrName}</th>
+                    <th>${order.nationalId}</th>
+                    <th>${order.gender}</th>
+                    <th>${order.birth}</th>
+                    <th>${order.phone}</th>
+                    <th>${order.email}</th>
+                    <th>${order.price}</th>
+                  </tr>`;
+                row += rowdata;
+            };
+            orderdetailHtml += row;
+            orderdetailHtml+=`</tbody> 
+                            </table>
+                            </div>
+                            </div>`;
+            FOrderDetailBody.innerHTML = orderdetailHtml; 
+        };
+
+        //取得 comment partial view
+        const getCommentPartial = async (id) => {
+            //console.log('id:',id);
+            const response = await fetch(`/Customer/Userprofile/getCommentPartial?id=${id}`);
+            const data = await response.json();
+
+            let modalBody = document.getElementById('FCommentBody'); // 找到模態框的內容區域
+            modalBody.innerHTML = ''; // 清空內容
+            if (data[0].comment.length > 0) {
+                let commentHtml = `<h4>訂單評論</h4><hr>
+                    <textarea id="commentTextarea_${id}" name="comment" cols="40" rows="5" style="resize: none;">${data[0].comment}</textarea><br/>`; // 使用订单ID作为textarea的ID
+                modalBody.innerHTML = commentHtml; // 插入评论内容到评论框
+            } else {
+                modalBody.innerHTML = `<h4>訂單評論</h4><hr><textarea id="commentTextarea_${id}" name="comment" cols="40" rows="5"  style="resize: none;"></textarea><br/>`; // 如果没有评论，显示相应的消息
+            }
+        }
+
+        // 在按鈕單擊事件中呼叫getCommentPartial並將返回的HTML字符串插入到模態框中
+        const openModalWithComment = async (id) => {
+            const commentHtml = await getCommentPartial(id);
+                $('#FCommentPartial').modal('show');
+
+            //儲存評論
+            const commentSaveBtn = document.getElementById('CommentSaveBtn');
+            commentSaveBtn.addEventListener('click', () => {
+                const commentTextarea = document.getElementById(`commentTextarea_${id}`);
+                const comment = commentTextarea.value;
+                console.log('comment:',comment);
+                saveComment(id, comment);
+            });
+        }
+
+        //評論存回資料庫
+        const saveComment = async (id, comment) => {
+            try {
+                const response = await fetch('/Customer/Userprofile/saveComment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: id, comment: comment })
+                });
+
+                if (response.ok) {
+                    // alert('保存成功')
+                    // 保存成功，顯示提示並關閉模態框
+                    swal.fire({
+                        title: '成功',
+                        text: '評論已成功保存到資料庫',
+                        icon: 'success',
+                        button: '確認'
+                    }).then(() => {
+                        $('#FCommentPartial').modal('hide');
+                    });
+                    loadFlightOrder();
+
+                } else {
+                    // 保存失敗，顯示錯誤提示
+                    console.error('評論保存失敗');
+                    swal.fire({
+                        title: '錯誤',
+                        text: '評論保存失敗',
+                        icon: 'error',
+                        button: '確認'
+                    });
+                }
+            } catch (error) {
+                // 出現錯誤，顯示錯誤提示
+                console.error('保存評論時出現錯誤:', error);
+                swal.fire({
+                    title: '錯誤',
+                    text: '保存評論時出現錯誤',
+                    icon: 'error',
+                    button: '確認'
+                });
+            }
+        }
+
+    </script>
+}

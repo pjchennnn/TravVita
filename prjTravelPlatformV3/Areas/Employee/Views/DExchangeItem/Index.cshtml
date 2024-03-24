@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "廣告管理";
+}
+
+@section Styles {
+    <link href="~/lib/datatables/css/jquery.datatables.css" rel="stylesheet" />
+    <head>
+
+    </head>
+    <style>
+        thead {
+            background-color: lightslategrey;
+            color: black;
+        }
+
+        #preview {
+            max-width: 300px;
+            max-height: 300px; /* 添加這行以限制最大高度 */
+            margin-top: 20px;
+        }
+
+            #preview img {
+                max-width: 100%;
+                max-height: 100%; /* 添加這行以確保圖片不會超出容器 */
+            }
+    </style>
+}
+
+<input type="file" id="upload" accept="image/*">
+<div id="preview"></div>
+<button id="saveBtn" type="button" class="btn btn-info"><i class="fa-solid fa-circle-plus" style="font-size:0.8rem"></i> 更新圖片</button>
+<button id="sendBtn" type="button" class="btn btn-info"><i class="fa-solid fa-circle-plus" style="font-size:0.8rem"></i> 推播廣告</button>
+
+
+
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+    <script src="//cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+    <script>
+
+        document.getElementById('upload').addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var img = new Image();
+                img.src = e.target.result;
+                img.onload = function () {
+                    var preview = document.getElementById('preview');
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', function () {
+            var previewImg = document.querySelector('#preview img');
+            if (previewImg) {
+                var canvas = document.createElement('canvas');
+                canvas.width = previewImg.width;
+                canvas.height = previewImg.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(previewImg, 0, 0);
+                var dataURL = canvas.toDataURL('image/jpeg');
+
+                // 將圖片儲存在本地
+                var link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'image.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // 顯示 SweetAlert
+                swal("Success!", "Image saved successfully!", "success");
+            }
+        });
+
+        //SignalR的程式碼部分
+        var connection = new signalR.HubConnectionBuilder().withUrl("/adHub").build();
+
+        //與Server建立連線
+        connection.start().then(function () {
+            console.log("Hub 連線完成");
+        }).catch(function (err) {
+            alert('連線錯誤: ' + err.toString());
+        });
+
+        $('#sendBtn').on('click', function () {
+            connection.invoke("TriggerClientButtonClick").catch(function (err) {
+                alert('傳送錯誤: ' + err.toString());
+            });
+        });
+      
+    </script>
+}
