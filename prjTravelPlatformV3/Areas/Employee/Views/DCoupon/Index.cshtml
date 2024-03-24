@@ -207,11 +207,15 @@
                     //依自己的form增加需要驗證的欄位(驗證規則在partial view中)
                     const errorCouponCode = document.querySelector(`[data-valmsg-for="CouponCode"]`);
                     const errorDiscount = document.querySelector(`[data-valmsg-for="Discount"]`);
+                    const errorProductType = document.querySelector(`[data-valmsg-for="ProductType"]`);
                     if (errorCouponCode) {
                         errorCouponCode.textContent = data.errors.CouponCode[0];
                     }
                     if (errorDiscount) {
                         errorDiscount.textContent = data.errors.Discount[0];
+                    }
+                    if (errorProductType) {
+                        errorProductType.textContent = data.errors.ProductType[0];
                     }
                 }
             } catch (error) {
