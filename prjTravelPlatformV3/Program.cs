@@ -56,6 +56,7 @@ builder.Services.AddCors(option =>
 	   .AllowAnyHeader());
 });
 
+
 //cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
@@ -109,10 +110,11 @@ builder.Services.AddSignalR();
 
 //mailService
 builder.Services.AddTransient<MailService>();
-
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddSingleton<TokenManager>();
 builder.Services.AddScoped<PasswordResetService>();
+
 
 
 var app = builder.Build();

@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
@@ -15,10 +18,12 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Airline
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly dbTravalPlatformContext _context;
-        public FlightController(IHttpContextAccessor httpContextAccessor, dbTravalPlatformContext context)
+        private ICompositeViewEngine _viewEngine;
+        public FlightController(IHttpContextAccessor httpContextAccessor, dbTravalPlatformContext context, ICompositeViewEngine viewEngine)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _viewEngine = viewEngine;
         }
 
         public IActionResult Index()
@@ -54,13 +59,11 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Airline
         public IActionResult OrderConfirm()
         {
             var CustomerId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (CustomerId == 0)
-            {
-                return RedirectToAction("Index", "Login", new { area = "CustomizedIdentity" });
-            }
+           
             ViewBag.CustomerId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.Email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
             return View();
         }
+
     }
 }

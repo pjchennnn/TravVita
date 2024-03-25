@@ -1413,15 +1413,16 @@
             //console.log('id:',id);
             const response = await fetch(`/Customer/Userprofile/getCommentPartial?id=${id}`);
             const data = await response.json();
+            //console.log(data)
 
             let modalBody = document.getElementById('FCommentBody'); // 找到模態框的內容區域
             modalBody.innerHTML = ''; // 清空內容
-            if (data[0].comment.length > 0) {
+            if (data[0].comment != null) {
                 let commentHtml = `<h4>訂單評論</h4><hr>
                     <textarea id="commentTextarea_${id}" name="comment" cols="40" rows="5" style="resize: none;">${data[0].comment}</textarea><br/>`; // 使用订单ID作为textarea的ID
                 modalBody.innerHTML = commentHtml; // 插入评论内容到评论框
             } else {
-                modalBody.innerHTML = `<h4>訂單評論</h4><hr><textarea id="commentTextarea_${id}" name="comment" cols="40" rows="5"  style="resize: none;"></textarea><br/>`; // 如果没有评论，显示相应的消息
+                modalBody.innerHTML = `<h4>訂單評論</h4><hr><textarea id="commentTextarea_${id}" name="comment" cols="40" rows="5"  style="resize: none;"></textarea><br/>`; 
             }
         }
 
