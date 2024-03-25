@@ -514,7 +514,18 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
 
                 #region 寄送訂單確認信
 
+                // 處理乘客資料
+                StringBuilder passengerDetails = new StringBuilder();
+                int passengerCount = 1;
 
+                foreach (var passenger in outgoingPsgerDetail)
+                {
+                    string gender = (bool)passenger.FGender ? "男性" : "女性"; // 將布林值轉換為對應的性別字串
+                    passengerDetails.AppendLine($"<p>乘客{passengerCount}</p>");
+                    passengerDetails.AppendLine($"<p>乘客姓名：{passenger.FPsgrName}</p>");
+                    passengerDetails.AppendLine($"<p>性別：{gender}</p>");
+                    passengerCount++;
+                }
                 //處理顯示參數
                 string phoneForEmail = order.FPhone;
                 string totalForEmail = ((int)order.FTotal).ToString("0");
@@ -524,109 +535,31 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
 
                 // 設置郵件內容
                 string subject = $"【TravVita】訂單號 {order.FOrderId} 已成立!";  // 主旨
-                string message = @$"
-<section class=""pt-40 layout-pb-md"">
-    <div class=""container"">
-        <div class=""row"">
-            <div id=""OrderConfirm"" class=""col-xl-8 col-lg-8 mx-auto"">
-                <div class=""d-flex flex-column items-center mt-60 lg:md-40 sm:mt-24"">
-                    <div class=""size-80 flex-center rounded-full bg-blue-1"">
-                        <i class=""icon-check text-30 text-white""></i>
-                    </div>
-                    <div class=""text-30 lh-1 fw-600 mt-20"">您的訂單已成立!</div>
-                    <div class=""text-15 text-light-1 mt-10"">詳細訂單內容已送至您的信箱: {order.FEmail}</div>
-                </div>
-                <div class=""border-type-1 rounded-8 px-50 py-35 mt-40"">
-                    <div class=""row"">
-                        <div class=""col-lg-3 col-md-6"">
-                            <div class=""text-15 lh-12"">訂單編號</div>
-                            <div class=""text-15 lh-12 fw-500 text-blue-1 mt-10"">{order.FOrderId}</div>
-                        </div>
-                        <div class=""col-lg-3 col-md-6"">
-                            <div class=""text-15 lh-12"">訂單日期</div>
-                            <div class=""text-15 lh-12 fw-500 text-blue-1 mt-10"">{order.FOrderDate}</div>
-                        </div>
-                        <div class=""col-lg-3 col-md-6"">
-                            <div class=""text-15 lh-12"">總金額</div>
-                            <div class=""text-15 lh-12 fw-500 text-blue-1 mt-10"">{totalForEmail}</div>
-                        </div>
-                        <div class=""col-lg-3 col-md-6"">
-                            <div class=""text-15 lh-12"">付款方式</div>
-                            <div class=""text-15 lh-12 fw-500 text-blue-1 mt-10"">{order.FPayment}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class=""border-light rounded-8 px-50 py-40 mt-40"">
-                    <h4 class=""text-20 fw-500 mb-30"">訂購人資料</h4>
-                    <div class=""row y-gap-10"">
-                        <div class=""col-12"">
-                            <div class=""d-flex flex-column "">
-                                <div class=""text-15 lh-16"">訂購會員姓名</div>
-                                <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">{order.FName}</div>
-                            </div>
-                        </div>
-                        <div class=""col-12"">
-                            <div class=""d-flex flex-column border-top-light pt-10"">
-                                <div class=""text-15 lh-16"">電話</div>
-                                <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">{order.FPhone}</div>
-                            </div>
-                        </div>
-                        <div class=""col-12"">
-                            <div class=""d-flex flex-column border-top-light pt-10"">
-                                <div class=""text-15 lh-16"">電子郵件</div>
-                                <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">{order.FEmail}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <h4 class=""text-20 fw-500 mt-30 mb-30"">行程資料</h4>
-                    <div class=""row y-gap-10"">
-                        <div class=""col"">
-                            <div class=""row y-gap-10 items-center mb-3"">
-                                <div class=""col-sm-auto"">
-                                    <img class=""size-40"" src=""/img/airline/eva.jpg"" alt=""image"">
-                                </div>
-                                <div class=""col-8"">
-                                    <div class=""row x-gap-20 items-end"">
-                                        <div class=""col-auto"">
-                                            <div class=""lh-15 fw-500"" id=""departure"">{outgoingFlightDetail.FDeparture.FAirport}</div>
-                                        </div>
-                                        <div class=""col text-center"">
-                                            <div class=""flightLine"">
-                                                <div></div>
-                                                <div></div>
-                                            </div>
-                                            <div class=""text-15 lh-15 text-light-1 mt-10"">直達</div></div>
-<div class=""col-auto"">
-    <div class=""lh-15 fw-500"" id=""destination"">{outgoingFlightDetail.FDestination.FAirport}</div>
-</div>
-</div>
-</div>
-</div>
-<div class=""col-12"">
-    <div class=""d-flex flex-column border-top-light pt-10"">
-        <div class=""text-15 lh-16"">去程</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">起飛時間：{outgoingFlightDetail.FDepartureTime}</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">降落時間：{outgoingFlightDetail.FArrivalTime}</div>
-    </div>
-</div>
-<div class=""col-12"">
-    <div class=""d-flex flex-column border-top-light pt-10"">
-        <div class=""text-15 lh-16"">回程</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">起飛時間：{returnFlightDetail.FDepartureTime}</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">降落時間：{returnFlightDetail.FArrivalTime}</div>
-    </div>
-</div>";
-                message += @$"
-<div class=""col-12"">
-    <div class=""d-flex flex-column border-top-light pt-10"">
-        <div class=""text-15 lh-16"">乘客資料</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">乘客1</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">乘客姓名：林小寶</div>
-        <div class=""text-15 lh-16 fw-500 text-blue-1 mx-3"">性別：男性</div>
-    </div>
-</div>";
-                message += "</div></div></div></div></div></section>";
-                message += $"<div><a href='https://localhost:7119/Customer/Userprofile'><span>點擊連結確認訂單細節內容</span></a></div>";
+                string message = @$"<p>親愛的會員，您的訂單號&nbsp;<span style=""color:#3498db""><strong>{order.FOrderId}</strong></span>已成立！</p>
+<p><span style=""font-size:16px""><a href=""https://localhost:7119/Customer/Userprofile"">點擊連結至會員中心確認訂單內容</a></span></p>
+<hr />
+<p><strong>【訂單細節】</strong></p>
+<p>【訂單編號】{order.FOrderId}</p>
+<p>【訂單日期】{order.FOrderDate}</p>
+<p>【總金額】{totalForEmail}</p>
+<p>【付款方式】{order.FPayment}</p>
+<h4><strong>【訂購人資料】</strong></h4>
+<p>【訂購會員姓名】{order.FName}</p>
+<p>【電話】{order.FPhone}</p>
+<p>【電子郵件】{order.FEmail}</p>
+<h4>【行程資料】</h4>
+<p>{outgoingFlightDetail.FDeparture.FAirport}　直達　{outgoingFlightDetail.FDestination.FAirport}</p>
+<p>【去程】</p>
+<p>起飛時間：{outgoingFlightDetail.FDepartureTime}</p>
+<p>降落時間：{outgoingFlightDetail.FArrivalTime}</p>
+<p>【回程】</p>
+<p>起飛時間：{returnFlightDetail.FDepartureTime}</p>
+<p>降落時間：{returnFlightDetail.FArrivalTime}</p>
+<p><strong>【乘客資料】</strong></p>
+{passengerDetails}
+<hr />
+<p>感謝您使用TravVita服務，有任何問題歡迎隨時與我們聯繫。</p>
+";
 
                 // 使用郵件發送者來發送郵件
                 EmailSender mailsend = new EmailSender();
