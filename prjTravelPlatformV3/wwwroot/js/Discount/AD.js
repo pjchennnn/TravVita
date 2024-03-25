@@ -47,15 +47,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //SignalR的程式碼部分
-var connection = new signalR.HubConnectionBuilder().withUrl("/adHub").build();
+var connection1 = new signalR.HubConnectionBuilder().withUrl("/adHub").build();
 
-connection.start().then(function (count) {
+connection1.start().then(function (count) {
     console.log("SignalR 連線成功!");
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
-connection.on("countMethod", function (count) {
+connection1.on("countMethod", function (count) {
     console.log("count");
     var adImg = document.getElementById("adImage");
     var aURL = document.getElementById("aURL");
@@ -90,8 +90,9 @@ connection.on("countMethod", function (count) {
     }
     /* toggleImage()*/
     document.getElementById("button01").click();
+    /*connection1.stop();*/
 });
-connection.on("buttonClick", function () {
+connection1.on("buttonClick", function () {
     console.log("服務器發送了按鈕點擊事件！");
    /* console.log(selectValue)*/
     // 在這裡觸發button01按鈕的事件

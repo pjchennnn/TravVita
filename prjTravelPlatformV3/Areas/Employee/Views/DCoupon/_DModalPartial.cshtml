@@ -11,10 +11,13 @@
         @Html.AntiForgeryToken()
 
         <input asp-for="CouponId" style="display:none" />
-
+        
+        <div class="mb-3">
+            <span id="checklist" class="text-danger" style="display=none"></span>
+        </div>
         <div class="mb-3">
             <label asp-for="CouponCode" class="form-label">@Html.DisplayNameFor(h=>h.CouponCode)</label>
-            <input asp-for="CouponCode" id="couponCode" class="form-control" />
+            <input asp-for="CouponCode" id="couponCode" class="form-control"  />
             <label class="checkbox-inline">
                 <input type="checkbox" id="autoGenerateCheckbox" name="autoGenerateCheckbox" value="option1"> 自動生成十碼折扣碼
             </label>
@@ -23,47 +26,55 @@
         </div>
         <div class="mb-3">
             <label asp-for="CouponName" class="form-label">@Html.DisplayNameFor(h=>h.CouponName)</label>
-            <input asp-for="CouponName" class="form-control">
+            <input asp-for="CouponName" id="inputName" class="form-control" >
             <span asp-validation-for="CouponName" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="Amount" class="form-label">@Html.DisplayNameFor(h=>h.Amount)</label>
-            <input asp-for="Amount" class="form-control">
+            <input asp-for="Amount" id="inputAmount" class="form-control">
             <span asp-validation-for="Amount" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="Discount" class="form-label">@Html.DisplayNameFor(h=>h.Discount)</label>
-            <input asp-for="Discount" class="form-control">
+            <input asp-for="Discount" id="inputDiscount" class="form-control">
             <span asp-validation-for="Discount" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="StartDate" id="inputStartDate" type="date" class="form-control" />
+            <input asp-for="EndDate" id="inputEndDate" type="date" class="form-control" />
         </div>
         <div class="mb-3">
             <label asp-for="ProductType" class="form-label">@Html.DisplayNameFor(h=>h.ProductType)</label>
             @* <input asp-for="ProductType" class="form-control"> *@
-            <select asp-for="ProductType" name="choice">
+            <select asp-for="ProductType" id="ProductType" name="choice">
                 <option value="旅遊">旅遊 </option>
                 <option value="住宿">住宿</option>
                 <option value="機票">機票</option>
                 <option value="租車">租車</option>
                 <option value="伴手禮">伴手禮</option>
                 <option value="代辦">代辦</option>
+                <option value="平台">平台</option>
             </select>
-            <span asp-validation-for="ProductType" class="text-danger"></span>
+            <input asp-for="ProductType" id="inputProductType" class="form-control" style="display:none;">
+            <span asp-validation-for="ProductType" class="text-danger" ></span>
         </div>
         <div class="mb-3">
             <label asp-for="Rule" class="form-label">@Html.DisplayNameFor(h=>h.Rule)</label>
             @* <input asp-for="Rule" class="form-control">
             <span asp-validation-for="Rule" class="text-danger"></span> *@
-            <select asp-for="Rule" name="choice">
+            <select asp-for="Rule" name="choice" >
                 <option value="指定品">指定品 </option>
                 <option value="季節">季節</option>
             </select>
+            <input asp-for="Rule" id="inputRule" class="form-control" style="display:none;">
         </div>
         <div class="mb-3">
             <label asp-for="Enable" class="form-label">@Html.DisplayNameFor(h=>h.Enable)</label>
             @* <input asp-for="Enable" class="form-control"> *@
-            <input asp-for="Enable" type="radio" name="option" value="True" /> 啟用
-            <input asp-for="Enable" type="radio" name="option" value="False"> 未啟用
+            <input asp-for="Enable" type="radio" name="option" value="True"  /> 啟用
+            <input asp-for="Enable" type="radio" name="option" value="False" /> 未啟用
             <span asp-validation-for="Enable" class="text-danger"></span>
+            <input asp-for="Enable" id="inputEnable" class="form-control" style="display:none;">
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
