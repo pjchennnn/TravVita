@@ -295,7 +295,7 @@ connection.on("LoadMessageHistoryFromLocal", function (MessageHistoryListJson) {
 
         } else {
             var $messageWrapper = $("<div></div>").addClass("message-wrapper");
-            var $profilePic = $("<img>").addClass("message-pp").attr("src", `/img/uploads/${SelfMID}.jpg`).attr("alt", "profile-pic");
+            var $profilePic = $("<img>").addClass("message-pp").attr("src", `/img/uploads/${m.SelfMemberId}.jpg`).attr("alt", "profile-pic");
             var $messageBoxWrapper = $("<div></div>").addClass("message-box-wrapper");
             var $messageBox = $("<div></div>").addClass("message-box").text(m.Message);
             var $timestamp = $("<span></span>").text(m.TimeStamp.substring(0, 16));
@@ -318,9 +318,9 @@ connection.on("UpdContent", function (messageJson) {
     console.log(1)
     var messageInfo = JSON.parse(messageJson);
     //console.log(messageInfo)
-    if (messageInfo.SelfMemberId.includes("E")) { //員工to客戶
+    if (messageInfo.SelfMemberId.includes("E") && currentIndex === -1) { //員工to客戶
         var $messageWrapper = $("<div></div>").addClass("message-wrapper");
-        var $profilePic = $("<img>").addClass("message-pp").attr("src", "/img/avatar.png").attr("alt", "profile-pic");
+        var $profilePic = $("<img>").addClass("message-pp").attr("src", `/img/uploads/${messageInfo.SelfMemberId}.jpg`).attr("alt", "profile-pic");
         var $messageBoxWrapper = $("<div></div>").addClass("message-box-wrapper");
         var $messageBox = $("<div></div>").addClass("message-box").text(messageInfo.Message);
         var $timestamp = $("<span></span>").text(messageInfo.TimeStamp.substring(0, 16));
