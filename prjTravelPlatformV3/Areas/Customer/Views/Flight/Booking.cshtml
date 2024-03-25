@@ -151,59 +151,7 @@
                             @* 乘客欄 *@                           
                         </div>
                         </form>
-                        <div class="mt-40">
-                            <h3 class="text-22 fw-500 mb-20">付款方式</h3>
-
-                            <div class="row y-gap-20 x-gap-20">
-                                <div class="col-auto">
-                                    <button class="button -dark-1 bg-blue-1 text-white px-20 py-15">信用卡</button>
-                                </div>
-
-                                <div class="col-auto">
-                                    <button id="btnCardDemo" class="button -blue-1 bg-light-2 px-20 py-15">Demo資料</button>
-                                </div>
-                            </div>
-
-                            <div class="row x-gap-20 y-gap-20 pt-20">
-
-                                <div class="col-md-6">
-
-                                    <div class="form-input ">
-                                        <input id="cardHolderName" type="text" required>
-                                        <label class="lh-1 text-16 text-light-1">Card holder name *</label>
-                                    </div>
-
-
-                                    <div class="form-input mt-20">
-                                        <input id="cardNumber" type="text" required>
-                                        <label class="lh-1 text-16 text-light-1">Credit/debit card number *</label>
-                                    </div>
-
-
-                                    <div class="row x-gap-20 y-gap-20 pt-20">
-                                        <div class="col-md-6">
-
-                                            <div class="form-input ">
-                                                <input id ="expiryDate" type="text" required>
-                                                <label class="lh-1 text-16 text-light-1">Expiry date *</label>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-6">
-
-                                            <div class="form-input ">
-                                                <input id="cvcCvv" type="text" required>
-                                                <label class="lh-1 text-16 text-light-1">CVC/CVV *</label>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
+                     
                         <div class="w-full h-1 bg-border mt-40 mb-40"></div>
 
                         <div class="row y-gap-20 items-center justify-between">
@@ -285,7 +233,7 @@
                         </div>
                     </div>
 
-                    <form method="post"  style="display:none;" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
+                    <form method="post" id="payform" style="" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
                         <input type="text" name="MerchantID" />
                         <input type="text" name="MerchantTradeNo" />
                         <input type="text" name="MerchantTradeDate" />
@@ -325,6 +273,10 @@
         var Children = urlParams.get('Children');
         var Baby = urlParams.get('Baby');
 
+        // 将参数存储到会话中
+        sessionStorage.setItem('outgoingScheduleId', outgoingScheduleId);
+        sessionStorage.setItem('returnScheduleId', returnScheduleId);
+
         //全域變數
         var totalCount = 0;
         var typeId;
@@ -332,15 +284,6 @@
         var customerEmail = '@ViewBag.Email';
         console.log(customerEmail);
 
-        //Demo按鈕帶入資料
-        const btnCardDemo = document.getElementById('btnCardDemo');
-        btnCardDemo.addEventListener('click', function () {
-            // 填入假資料
-            document.getElementById('cardHolderName').value = '林小寶';
-            document.getElementById('cardNumber').value = '1234 5678 9012 3456';
-            document.getElementById('expiryDate').value = '12/25';
-            document.getElementById('cvcCvv').value = '123';
-        });
 
         //讀取選中的航班資訊放到 訂購航班明細 頁面
         const showSeletedFlights = async function () {
@@ -707,8 +650,11 @@
                 })
                     .then(datas => {
                         console.log('RoundTripOrder:', datas); // 在這裡處理 JSON 數據
+
+                        sessionStorage.setItem('orderId', datas.orderId);
+
                         //綠界
-                        var form = document.querySelector('form[method="post"]');
+                        var form = document.getElementById("payform");
                         form.querySelector('input[name="MerchantID"]').value = datas.paymentParams.merchantID;
                         form.querySelector('input[name="MerchantTradeNo"]').value = datas.paymentParams.merchantTradeNo;
                         form.querySelector('input[name="MerchantTradeDate"]').value = datas.paymentParams.merchantTradeDate;
@@ -745,7 +691,7 @@
             const adult1Form = document.querySelector('#mainData');
 
             // 填入驗證有誤假資料
-            adult1Form.querySelector('input[name="firstname_1"]').value = '小寶';
+            adult1Form.querySelector('input[name="firstname_1"]').value = '小安';
             adult1Form.querySelector('input[name="nationalId_1"]').value = 'A123'; // 添加身分證字號假資料
             adult1Form.querySelector('input[name="gender_1"][value="true"]').checked = true; // 男性
             adult1Form.querySelector('input[name="birth_1"]').value = '1990-01-01'; // 添加出生日期假資料
@@ -760,7 +706,7 @@
 
             // 填入假資料
             adult1Form.querySelector('input[name="lastname_1"]').value = '林';
-            adult1Form.querySelector('input[name="firstname_1"]').value = '小寶';
+            adult1Form.querySelector('input[name="firstname_1"]').value = '小安';
             adult1Form.querySelector('input[name="nationalId_1"]').value = 'A123456789'; // 添加身分證字號假資料
             adult1Form.querySelector('input[name="gender_1"][value="true"]').checked = true; // 男性
             adult1Form.querySelector('input[name="birth_1"]').value = '1990-01-01'; // 添加出生日期假資料

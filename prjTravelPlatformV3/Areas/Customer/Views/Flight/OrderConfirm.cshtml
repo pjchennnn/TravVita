@@ -186,11 +186,17 @@
 
 @section Scripts {
     <script>
+
         // 獲取URL參數
-        const urlParams = new URLSearchParams(window.location.search);
-        const outgoingScheduleId = urlParams.get('outgoingScheduleId');
-        const returnScheduleId = urlParams.get('returnScheduleId');
-        const orderId = urlParams.get('orderId');
+        var outgoingScheduleId = sessionStorage.getItem('outgoingScheduleId');
+        var returnScheduleId = sessionStorage.getItem('returnScheduleId');
+        var orderId = sessionStorage.getItem('orderId');
+
+        // 使用这些数据进行其他操作
+        console.log('outgoingScheduleId:', outgoingScheduleId);
+        console.log('returnScheduleId:', returnScheduleId);
+
+
         //訂單內容加載div
         const OrderConfirm = document.getElementById('OrderConfirm');
 
@@ -377,7 +383,8 @@
             }
         }
 
-        showOrderConfirmPage();
+            showOrderConfirmPage();
+
 
     </script>
 }

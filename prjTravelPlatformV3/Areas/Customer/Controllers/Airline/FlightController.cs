@@ -59,10 +59,7 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Airline
         public IActionResult OrderConfirm()
         {
             var CustomerId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (CustomerId == 0)
-            {
-                return RedirectToAction("Index", "Login", new { area = "CustomizedIdentity" });
-            }
+           
             ViewBag.CustomerId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.Email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
             return View();

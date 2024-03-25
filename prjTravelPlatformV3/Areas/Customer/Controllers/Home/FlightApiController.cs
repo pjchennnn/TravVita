@@ -359,18 +359,19 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Home
                     transaction.Commit();
 
                     #region 金流
-                    var latestOrderId = orderId;
+                    var latestOrderId = _context.TForders.OrderByDescending(o => o.FOrderId)
+                        .Select(o => o.FOrderId).FirstOrDefault();
 
-                    var amount = totalAmount;
+                    var amount = Convert.ToInt32(totalAmount);
 
                     var TradeDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                     var checkstr = "HashKey=pwFHCqoQZGmho4w6&ChoosePayment=Credit&EncryptType=1&ItemName=Item&MerchantID=3002607&MerchantTradeDate=" + TradeDate + "&MerchantTradeNo=" + latestOrderId
-                    + "&OrderResultURL=https://localhost:7119/Customer/Flight/OrderConfirm"
+                    + $"&OrderResultURL=https://localhost:7119/Customer/Flight/OrderConfirm"
                     + "&PaymentType=aio&ReturnURL=https://localhost:7119/Customer/Flight/OrderConfirm" + "&TotalAmount=" + amount
                     + "&TradeDesc=test&HashIV=EkRm7iFT261dpevs";
 
                     var encodedCheckstr = HttpUtility.UrlEncode(checkstr).ToLower();
-                    string hashedString;
+                    string hashedString = "";
                     // 將字串轉換為位元組陣列
                     byte[] bytes = Encoding.UTF8.GetBytes(encodedCheckstr);
 
