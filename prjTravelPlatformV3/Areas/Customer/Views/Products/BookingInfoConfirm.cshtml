@@ -104,7 +104,7 @@
                     <input type="radio" class="custom-input me-2" id="cash" name="payment" value="5">
                 </div>
                 <div class="mb-0">
-                    <label for="cash" class="mb-0 me-2"> LINE Pay</label> <!-- 添加 mb-0 me-2 类 -->
+                    <label for="cash" class="mb-0 me-2"> 歐付寶</label> <!-- 添加 mb-0 me-2 类 -->
                 </div>
             </div>
         </div>
@@ -675,20 +675,24 @@
                                         console.log("response.orderIds", response.orderIds);
                                         // 在提交成功后重定向到指定页面
                                         //var orderIdParams = response.orderIds.join('&');
-                                        var form = document.querySelector('form[method="post"]');
-                                        form.querySelector('input[name="MerchantID"]').value = response.paymentParams.merchantID;
-                                        form.querySelector('input[name="MerchantTradeNo"]').value = response.paymentParams.merchantTradeNo;
-                                        form.querySelector('input[name="MerchantTradeDate"]').value = response.paymentParams.merchantTradeDate;
-                                        form.querySelector('input[name="PaymentType"]').value = response.paymentParams.paymentType;
-                                        form.querySelector('input[name="TotalAmount"]').value = response.paymentParams.totalAmount;
-                                        form.querySelector('input[name="TradeDesc"]').value = response.paymentParams.tradeDesc;
-                                        form.querySelector('input[name="ItemName"]').value = response.paymentParams.itemName;
-                                        form.querySelector('input[name="ReturnURL"]').value = response.paymentParams.returnURL;
-                                        form.querySelector('input[name="OrderResultURL"]').value = response.paymentParams.orderResultURL;
-                                        form.querySelector('input[name="ChoosePayment"]').value = response.paymentParams.choosePayment;
-                                        form.querySelector('input[name="CheckMacValue"]').value = response.paymentParams.checkMacValue;
-                                        form.submit();
-                                        //window.location.href = '@Url.Action("BookingFinish", "Products", new { area = "Customer", orderIds = "' + orderIdParams + '" })';
+                                        if (response.paymentParams !== null) {
+                                            var form = document.querySelector('form[method="post"]');
+                                            form.querySelector('input[name="MerchantID"]').value = response.paymentParams.merchantID;
+                                            form.querySelector('input[name="MerchantTradeNo"]').value = response.paymentParams.merchantTradeNo;
+                                            form.querySelector('input[name="MerchantTradeDate"]').value = response.paymentParams.merchantTradeDate;
+                                            form.querySelector('input[name="PaymentType"]').value = response.paymentParams.paymentType;
+                                            form.querySelector('input[name="TotalAmount"]').value = response.paymentParams.totalAmount;
+                                            form.querySelector('input[name="TradeDesc"]').value = response.paymentParams.tradeDesc;
+                                            form.querySelector('input[name="ItemName"]').value = response.paymentParams.itemName;
+                                            form.querySelector('input[name="ReturnURL"]').value = response.paymentParams.returnURL;
+                                            form.querySelector('input[name="OrderResultURL"]').value = response.paymentParams.orderResultURL;
+                                            form.querySelector('input[name="ChoosePayment"]').value = response.paymentParams.choosePayment;
+                                            form.querySelector('input[name="CheckMacValue"]').value = response.paymentParams.checkMacValue;
+                                            form.submit();
+                                        }
+                                        else {
+                                            window.location.href = '@Url.Action("BookingFinish", "Products", new { area = "Customer", orderIds = "' + orderIdParams + '" })';
+                                        }
                                     } else {
                                         console.log("訂單新增失敗:", response.message);
                                         // 在此處你可以處理失敗後的操作，例如顯示錯誤提示等

@@ -636,7 +636,7 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Product
                     // 創建訂單詳細信息
                     foreach (var orderDetail in order.OrderDetails)
                     {
-                        
+
                         TIorderDetail rorderDetail = new TIorderDetail
                         {
                             FOrderId = rorder.FOrderId, // 使用新增的訂單的 FOrderId
@@ -655,63 +655,63 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Product
 
                     await _context.SaveChangesAsync();
                 }
-            var paymentId = _context.TIorders
-                                    .OrderByDescending(o => o.FOrderId)
-                                    .Select(o => o.FPayId).FirstOrDefault();
-            object paymentParams = null;
-            if (paymentId != null && paymentId == 5)
-            {
-                var latestOrderId = _context.TIorderViews
-                                    .OrderByDescending(o => o.FOrderId)
-                                    .Select(o => o.FOrderId).FirstOrDefault();
-
-                var amount = _context.TIorderViews
-                            .OrderByDescending(o => o.FOrderId)
-                            .Select(o => Convert.ToInt32(o.FTotal)).FirstOrDefault();
-
-                var TradeDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-                var checkstr = "HashKey=5294y06JbISpM5x9&ChoosePayment=ALL&ItemName=Item&MerchantID=2000132&MerchantTradeDate=" + TradeDate + "&MerchantTradeNo=" + latestOrderId
-                + "&OrderResultURL=https://localhost:7119/Customer/Products/BookingFinish"
-                + "&PaymentType=aio&ReturnURL=https://localhost:7119/Customer/Products/BookingFinish" + "&TotalAmount=" + amount
-                + "&TradeDesc=test&HashIV=v77hoKGq4kWxNNIS";
-
-                var encodedCheckstr = HttpUtility.UrlEncode(checkstr).ToLower();
-                string hashedString;
-                // 將字串轉換為位元組陣列
-                byte[] bytes = Encoding.UTF8.GetBytes(encodedCheckstr);
-
-                // 建立 SHA256 實例
-                using (SHA256 sha256 = SHA256.Create())
+                var paymentId = _context.TIorders
+                                        .OrderByDescending(o => o.FOrderId)
+                                        .Select(o => o.FPayId).FirstOrDefault();
+                object paymentParams = null;
+                if (paymentId != null && paymentId == 5)
                 {
-                    // 計算雜湊值
-                    byte[] hash = sha256.ComputeHash(bytes);
+                    var latestOrderId = _context.TIorderViews
+                                        .OrderByDescending(o => o.FOrderId)
+                                        .Select(o => o.FOrderId).FirstOrDefault();
 
-                    // 將位元組陣列轉換為十六進位字串
-                    StringBuilder stringBuilder = new StringBuilder();
-                    foreach (byte b in hash)
+                    var amount = _context.TIorderViews
+                                .OrderByDescending(o => o.FOrderId)
+                                .Select(o => Convert.ToInt32(o.FTotal)).FirstOrDefault();
+
+                    var TradeDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    var checkstr = "HashKey=5294y06JbISpM5x9&ChoosePayment=Credit&ItemName=Item&MerchantID=2000132&MerchantTradeDate=" + TradeDate + "&MerchantTradeNo=" + latestOrderId
+                    + "&OrderResultURL=https://localhost:7119/Customer/Products/BookingFinish"
+                    + "&PaymentType=aio&ReturnURL=https://localhost:7119/Customer/Products/BookingFinish" + "&TotalAmount=" + amount
+                    + "&TradeDesc=test&HashIV=v77hoKGq4kWxNNIS";
+
+                    var encodedCheckstr = HttpUtility.UrlEncode(checkstr).ToLower();
+                    string hashedString;
+                    // 將字串轉換為位元組陣列
+                    byte[] bytes = Encoding.UTF8.GetBytes(encodedCheckstr);
+
+                    // 建立 SHA256 實例
+                    using (SHA256 sha256 = SHA256.Create())
                     {
-                        stringBuilder.Append(b.ToString("x2"));
-                    }
-                    hashedString = stringBuilder.ToString().ToUpper();
-                }
+                        // 計算雜湊值
+                        byte[] hash = sha256.ComputeHash(bytes);
 
-                // 構建支付參數
-                paymentParams = new
-                {
-                    // 根據綠界的API文件設置參數
-                    MerchantID = "2000132",
-                    MerchantTradeNo = latestOrderId,
-                    MerchantTradeDate = TradeDate,
-                    PaymentType = "aio",
-                    TotalAmount = amount,
-                    TradeDesc = "test",
-                    ItemName = "Item",
-                    ReturnURL = "https://localhost:7119/Customer/Products/BookingFinish",
-                    OrderResultURL = "https://localhost:7119/Customer/Products/BookingFinish",
-                    ChoosePayment = "Credit",
-                    CheckMacValue = hashedString
-                };
-            }
+                        // 將位元組陣列轉換為十六進位字串
+                        StringBuilder stringBuilder = new StringBuilder();
+                        foreach (byte b in hash)
+                        {
+                            stringBuilder.Append(b.ToString("x2"));
+                        }
+                        hashedString = stringBuilder.ToString().ToUpper();
+                    }
+
+                    // 構建支付參數
+                    paymentParams = new
+                    {
+                        // 根據綠界的API文件設置參數
+                        MerchantID = "2000132",
+                        MerchantTradeNo = latestOrderId,
+                        MerchantTradeDate = TradeDate,
+                        PaymentType = "aio",
+                        TotalAmount = amount,
+                        TradeDesc = "test",
+                        ItemName = "Item",
+                        ReturnURL = "https://localhost:7119/Customer/Products/BookingFinish",
+                        OrderResultURL = "https://localhost:7119/Customer/Products/BookingFinish",
+                        ChoosePayment = "Credit",
+                        CheckMacValue = hashedString
+                    };
+                }
 
                 return Json(new { success = true, message = "訂單新增成功", orderIds = createdOrderIds, paymentParams = paymentParams });
             }
@@ -720,32 +720,5 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Product
                 return Json(new { success = false, message = $"訂單新增失敗：{ex.ToString()}" });
             }
         }
-
-
-        //[HttpPost]
-        //[Route("MapRequest")]
-        //public async Task<IActionResult> MapRequest([FromBody] RequestViewModel requestData)
-        //{
-        //    try
-        //    {
-        //        // 發送請求到目標 API
-        //        var response = await _httpClient.PostAsJsonAsync("https://logistics-stage.ecpay.com.tw/Express/map?HashKey=5294y06JbISpM5x9&HashIV=v77hoKGq4kWxNNIS", requestData);
-
-        //        // 檢查 API 回應的狀態碼
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var responseData = await response.Content.ReadAsStringAsync();
-        //            return Ok(responseData);
-        //        }
-        //        else
-        //        {
-        //            return StatusCode((int)response.StatusCode, "API request failed");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
     }
 }
