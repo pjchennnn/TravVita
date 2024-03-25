@@ -90,6 +90,7 @@ connection1.on("countMethod", function (count) {
     }
     /* toggleImage()*/
     document.getElementById("button01").click();
+    /*connection1.stop();*/
 });
 connection1.on("buttonClick", function () {
     console.log("服務器發送了按鈕點擊事件！");

@@ -60,6 +60,8 @@
     <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script src="//cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
     <script>
+        let couponCode;
+        let autoGenerateCheckbox;
 
         const editModal = document.getElementById("edit-modal");
         const createModal = document.getElementById("create-modal");
@@ -106,12 +108,109 @@
         }
 
 
-        //取得partial view，新增跟編輯都呼叫這個function，新增id參數帶0，編輯是選到的那列資料的id
+        // 取得partial view，新增跟編輯都呼叫這個function，新增id參數帶0，編輯是選到的那列資料的id
         const getEditPartial = async (id) => {
             const response = await fetch(`@Url.Content("~/Employee/DCoupon/GetPartial")?id=${id}`);
             const data = await response.text();
-            editModal.innerHTML = data
+            editModal.innerHTML = data;
+
+            // 重新绑定 checkbox 变更事件
+            bindCheckboxChangeEvent();
+
+            // 重新绑定 select 变更事件
+            bindSelectChangeEvent();
+
+            // 绑定保存按钮点击事件
+            document.getElementById("btnSave").addEventListener("click", function () {
+                console.log("儲存按鈕被點擊了！");
+                var couponCode = document.getElementById("couponCode");
+                var couponName = document.getElementById("inputName");
+                var couponAmount = document.getElementById("inputAmount");
+                var couponDiscount = document.getElementById("inputDiscount");
+                var couponProductType = document.getElementById("inputProductType");
+                var couponRule = document.getElementById("inputRule");
+                var couponEnable = document.getElementById("inputEnable");
+                var couponStartDate = document.getElementById("inputStartDate");
+                var couponEndDate = document.getElementById("inputEndDate");
+                var checklist = document.getElementById("checklist");
+
+                // couponStartDate.value = document.getElementById("StartDate").value;
+                // couponEndDate.value = document.getElementById("EndDate").value;
+
+                // 进行表单验证
+                if (!couponCode.value ||
+                    !couponName.value ||
+                    !couponAmount.value ||
+                    !couponDiscount.value ||
+                    !couponProductType.value ||
+                    !couponRule.value ||
+                    !couponEnable.value ||
+                    !couponStartDate.value ||
+                    !couponEndDate.value) {
+                    // 如果验证未通过，阻止表单提交
+                    checklist.style.display = "block";
+                    return;
+                }
+
+                // 进行其他保存操作
+                // TODO: 根据需要执行保存操作
+
+            });
+        };
+
+        // 监听 checkbox 的变更事件
+        function bindCheckboxChangeEvent() {
+            document.getElementById("autoGenerateCheckbox").addEventListener("change", function () {
+                var checkbox = this;
+                var couponCodeInput = document.getElementById("couponCode");
+                if (checkbox.checked) {
+                    // 生成十码折扣码
+                    var discountCode = generateDiscountCode(10);
+                    // 将折扣码填充到 input 元素中
+                    couponCodeInput.value = discountCode;
+                } else {
+                    // 清空 input 元素
+                    couponCodeInput.value = '';
+                }
+            });
         }
+
+        // 监听 select 的变更事件
+        function bindSelectChangeEvent() {
+            var select1 = document.getElementById("ProductType");
+            var select2 = document.getElementById("Rule");
+            var choice1 = document.getElementById("Enable");
+            var couponProductType = document.getElementById("inputProductType");
+            var couponRule = document.getElementById("inputRule");
+            var couponEnable = document.getElementById("inputEnable");
+
+            select1.addEventListener("change", function () {
+                // 将选择框的值赋给输入框
+                couponProductType.value = this.value;
+               
+            });
+            select2.addEventListener("change", function () {
+                // 将选择框的值赋给输入框
+                // 获取其他相关值的逻辑也可以在这里处理
+                couponRule.value = this.value;
+               
+            });
+            choice1.addEventListener("change", function () {
+                couponEnable.value = this.value;
+            });
+        }
+
+        // 生成指定长度的折扣码
+        function generateDiscountCode(length) {
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var discountCode = '';
+            for (var i = 0; i < length; i++) {
+                discountCode += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return discountCode;
+        }
+
+
 
         //排程
         $(document).ready(function () {
@@ -167,63 +266,67 @@
                 });
             });
         });
-        //根據傳入的action name呼叫對應的api
-        const sendFetchRequest = async (actionName) => {
-            //抓取目前的form id
-            const formId = document.querySelector("form").getAttribute('id');
-            //目前的form id的DOM元素
-            const formIdDOM = document.getElementById(`${formId}`)
-            //新增form data物件
-            const formData = new FormData(formIdDOM);
-            //取得防偽標籤
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-            try {
-                const res = await fetch(`@Url.Content("~/api/Discounts/")` + actionName, {
-                    headers: {
-                        'RequestVerificationToken': token
-                    },
-                    body: formData,
-                    method: 'POST'
-                });
-                if (!res.ok) {
-                    throw new Error(`${res.status}`)
-                }
-                const data = await res.json();
+        // 根據傳入的action name呼叫對應的api
+                const sendFetchRequest = async (actionName) => {
+                    //抓取目前的form id
+                    const formId = document.querySelector("form").getAttribute('id');
+                    //目前的form id的DOM元素
+                    const formIdDOM = document.getElementById(`${formId}`)
+                    //新增form data物件
+                    const formData = new FormData(formIdDOM);
+                    //取得防偽標籤
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                    try {
+                        const res = await fetch(`@Url.Content("~/api/Discounts/")` + actionName, {
+                            headers: {
+                                'RequestVerificationToken': token
+                            },
+                            body: formData,
+                            method: 'POST'
+                        });
+                        if (!res.ok) {
+                            throw new Error(`${res.status}`)
+                        }
+                        const data = await res.json();
 
-                if (data.success) {
-                    console.log(data);
-                    //關閉modal
-                    var myModal = bootstrap.Modal.getInstance(couponPartial);
-                    myModal.hide();
-                    //顯示訊息
-                    Swal.fire({
-                        title: "Success",
-                        text: data.message,
-                        icon: "success"
-                    });
-                    //刷新datatable
-                    $('#tbCoupon').DataTable().ajax.reload();
-                } else {
-                    //依自己的form增加需要驗證的欄位(驗證規則在partial view中)
-                    const errorCouponCode = document.querySelector(`[data-valmsg-for="CouponCode"]`);
-                    const errorDiscount = document.querySelector(`[data-valmsg-for="Discount"]`);
-                    if (errorCouponCode) {
-                        errorCouponCode.textContent = data.errors.CouponCode[0];
+                        if (data.success) {
+                            console.log(data);
+                            //關閉modal
+                            var myModal = bootstrap.Modal.getInstance(couponPartial);
+                            myModal.hide();
+                            //顯示訊息
+                            Swal.fire({
+                                title: "Success",
+                                text: data.message,
+                                icon: "success"
+                            });
+                            //刷新datatable
+                            $('#tbCoupon').DataTable().ajax.reload();
+                        } else {
+                            //依自己的form增加需要驗證的欄位(驗證規則在partial view中)
+                            const errorCouponCode = document.querySelector(`[data-valmsg-for="CouponCode"]`);
+                            const errorDiscount = document.querySelector(`[data-valmsg-for="Discount"]`);
+                            const errorProductType = document.querySelector(`[data-valmsg-for="ProductType"]`);
+                            if (errorCouponCode) {
+                                errorCouponCode.textContent = data.errors.CouponCode[0];
+                            }
+                            if (errorDiscount) {
+                                errorDiscount.textContent = data.errors.Discount[0];
+                            }
+                            if (errorProductType) {
+                                errorProductType.textContent = data.errors.ProductType[0];
+                            }
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            title: "error",
+                            text: error.message,
+                            icon: "error"
+                        });
                     }
-                    if (errorDiscount) {
-                        errorDiscount.textContent = data.errors.Discount[0];
-                    }
+
+
                 }
-            } catch (error) {
-                Swal.fire({
-                    title: "error",
-                    text: error.message,
-                    icon: "error"
-                });
-            }
-
-
-        }
 
         $(document).ready(() => {
             loadCouponData();
