@@ -126,7 +126,7 @@ function OnOffLineChange(tc) {
             try {
                 connection.invoke("ClientConnection", "Customer");
             }
-            catch(err) {
+            catch (err) {
                 alert(err)
             }
         }).catch(function (err) {
@@ -210,8 +210,8 @@ connection.on("UpdList", function (jsonList) {
                                 div.scrollTop = div.scrollHeight;
                             })
                             .catch(function (err) {
-                            alert('傳送錯誤: ' + err.toString());
-                        });
+                                alert('傳送錯誤: ' + err.toString());
+                            });
                     }
 
                     if ($("#ChatList li.active").length === 0) {
@@ -318,7 +318,7 @@ connection.on("UpdContent", function (messageJson) {
     console.log(1)
     var messageInfo = JSON.parse(messageJson);
     //console.log(messageInfo)
-    if (messageInfo.SelfMemberId.includes("E") && currentIndex === -1) { //員工to客戶
+    if (messageInfo.SelfMemberId.includes("E") && prevActiveIndex === -1) { //員工to客戶
         var $messageWrapper = $("<div></div>").addClass("message-wrapper");
         var $profilePic = $("<img>").addClass("message-pp").attr("src", `/img/uploads/${messageInfo.SelfMemberId}.jpg`).attr("alt", "profile-pic");
         var $messageBoxWrapper = $("<div></div>").addClass("message-box-wrapper");
@@ -396,8 +396,8 @@ function sendToCustomer() {
             div.scrollTop = div.scrollHeight;
         })
         .catch(function (err) {
-        alert('傳送錯誤: ' + err.toString());
-    });
+            alert('傳送錯誤: ' + err.toString());
+        });
     document.getElementById('message').value = '';
     document.getElementById('message').focus();
 }
