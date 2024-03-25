@@ -12,6 +12,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using System.Collections.Generic;
+using System.Text;
+using System.Web;
+using System.Security.Cryptography;
 
 namespace prjTravelPlatform_release.Areas.Customer.Controllers.Product
 {
@@ -650,10 +653,67 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Product
                         _context.TIshoppingCarts.RemoveRange(shoppingCartItems);
                     }
 
-                    await _context.SaveChangesAsync();                   
+                    await _context.SaveChangesAsync();
+                }
+            var paymentId = _context.TIorders
+                                    .OrderByDescending(o => o.FOrderId)
+                                    .Select(o => o.FPayId).FirstOrDefault();
+            object paymentParams = null;
+            if (paymentId != null && paymentId == 5)
+            {
+                var latestOrderId = _context.TIorderViews
+                                    .OrderByDescending(o => o.FOrderId)
+                                    .Select(o => o.FOrderId).FirstOrDefault();
+
+                var amount = _context.TIorderViews
+                            .OrderByDescending(o => o.FOrderId)
+                            .Select(o => Convert.ToInt32(o.FTotal)).FirstOrDefault();
+
+                var TradeDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                var checkstr = "HashKey=5294y06JbISpM5x9&ChoosePayment=ALL&ItemName=Item&MerchantID=2000132&MerchantTradeDate=" + TradeDate + "&MerchantTradeNo=" + latestOrderId
+                + "&OrderResultURL=https://localhost:7119/Customer/Products/BookingFinish"
+                + "&PaymentType=aio&ReturnURL=https://localhost:7119/Customer/Products/BookingFinish" + "&TotalAmount=" + amount
+                + "&TradeDesc=test&HashIV=v77hoKGq4kWxNNIS";
+
+                var encodedCheckstr = HttpUtility.UrlEncode(checkstr).ToLower();
+                string hashedString;
+                // 將字串轉換為位元組陣列
+                byte[] bytes = Encoding.UTF8.GetBytes(encodedCheckstr);
+
+                // 建立 SHA256 實例
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    // 計算雜湊值
+                    byte[] hash = sha256.ComputeHash(bytes);
+
+                    // 將位元組陣列轉換為十六進位字串
+                    StringBuilder stringBuilder = new StringBuilder();
+                    foreach (byte b in hash)
+                    {
+                        stringBuilder.Append(b.ToString("x2"));
+                    }
+                    hashedString = stringBuilder.ToString().ToUpper();
                 }
 
-                return Json(new { success = true, message = "訂單新增成功", orderIds = createdOrderIds });
+                // 構建支付參數
+                paymentParams = new
+                {
+                    // 根據綠界的API文件設置參數
+                    MerchantID = "2000132",
+                    MerchantTradeNo = latestOrderId,
+                    MerchantTradeDate = TradeDate,
+                    PaymentType = "aio",
+                    TotalAmount = amount,
+                    TradeDesc = "test",
+                    ItemName = "Item",
+                    ReturnURL = "https://localhost:7119/Customer/Products/BookingFinish",
+                    OrderResultURL = "https://localhost:7119/Customer/Products/BookingFinish",
+                    ChoosePayment = "Credit",
+                    CheckMacValue = hashedString
+                };
+            }
+
+                return Json(new { success = true, message = "訂單新增成功", orderIds = createdOrderIds, paymentParams = paymentParams });
             }
             catch (Exception ex)
             {

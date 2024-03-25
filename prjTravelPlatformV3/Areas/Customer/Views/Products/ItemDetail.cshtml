@@ -245,24 +245,6 @@
                 $('#itemPrice').html('NT. ' + selectedItem.fPrice);
             }
         }
-        // // 替換 <oembed> 標籤為實際的嵌入內容
-        // function replaceOembedTagsInDescription(description) {
-        //     var parser = new DOMParser();
-        //     var doc = parser.parseFromString(description, 'text/html');
-        //     var oembeds = doc.querySelectorAll('oembed');
-
-        //     oembeds.forEach(function (oembed) {
-        //         var url = oembed.getAttribute('url');
-        //         if (url.includes('youtu')) {
-        //             var videoId = url.split('v=')[1].split('?')[0];
-        //             oembed.outerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe>';
-        //         }
-        //         // 這裡可以添加其他媒體類型的處理邏輯
-        //     });
-
-        //     // 更新商品描述
-        //     $('#itemDescription').html(doc.body.innerHTML);
-        // }
         // 加入購物車點擊事件
         $(document).ready(function () {
             // 取得商品細節資訊
@@ -296,19 +278,6 @@
                     console.error('取得商品詳細資訊時發生錯誤：', error);
                 }
             });
-            // // 替换 <oembed> 标签为实际的嵌入内容
-            // document.addEventListener('DOMContentLoaded', function () {
-            //     var oembeds = document.querySelectorAll('oembed');
-
-            //     oembeds.forEach(function (oembed) {
-            //         var url = oembed.getAttribute('url');
-            //         if (url.includes('youtu')) {
-            //             var videoId = url.split('v=')[1].split('?')[0];
-            //             oembed.outerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe>';
-            //         }
-            //         // 这里可以添加其他媒体类型的处理逻辑
-            //     });
-            // });
             // 取得規格清單
             $.ajax({
                 url: '/api/ProductApi/GetItemSpecList?productId=' + productId,  // 請替換為你的後端 API 路由
@@ -415,26 +384,9 @@
                                          </button>
                                     </div>`;
                         $('#nav-mission').append(moreBtn);
-                        // // 計算評論筆數和平均分數
-                        // var totalScore = 0;
-                        // var numReviews = itemRevData.length;
-                        // // console.log(numReviews);
-                        // itemRevData.forEach(function (review) {
-                        //     totalScore += review.fProductScore;
-                        // });
-
-                        // var averageScore = numReviews > 0 ? totalScore / numReviews : 0;
-
-                        // // 更新評論數量和平均分數的 HTML 元素
-                        // $('#commentNum').html(`(${numReviews}則評論)`);
-                        // $('#itemRate').html(getStarRatingHtml(averageScore));
                     } else {
                         // 沒有評論資料，顯示暫無評論
                         $('#nav-mission').append('<p class="text-muted">暫無評論</p>');
-                        // // 評論數量歸零
-                        // $('#commentNum').html('(0則評論)');
-                        // // 平均分數為零星
-                        // $('#itemRate').html(getStarRatingHtml(0));
                     }
                 },
                 error: function (error) {

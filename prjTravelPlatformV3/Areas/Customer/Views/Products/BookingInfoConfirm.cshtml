@@ -108,6 +108,21 @@
                 </div>
             </div>
         </div>
+        <div>
+            <form method="post" style="display:none" action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
+                <input type="text" name="MerchantID" />
+                <input type="text" name="MerchantTradeNo" />
+                <input type="text" name="MerchantTradeDate" />
+                <input type="text" name="PaymentType" />
+                <input type="number" name="TotalAmount" />
+                <input type="text" name="TradeDesc" />
+                <input type="text" name="ItemName" />
+                <input type="text" name="ReturnURL" />
+                <input type="text" name="OrderResultURL" />
+                <input type="text" name="ChoosePayment" />
+                <input type="text" name="CheckMacValue" />
+            </form>
+        </div>
         <div class="my-4"></div>
         
     </section>
@@ -319,37 +334,6 @@
                         checkoutListContainer += sectionHTML;
                     });
                     document.getElementById('dynamicContentSection').innerHTML = checkoutListContainer;
-
-                    // document.getElementById("sendRequestBtn").addEventListener("click", async function () {
-                    //     window.open(https://emap.presco.com.tw/c2cemap.ashx?url=https://localhost:7119/home/AddressReceived                        
-                    //     // try {
-                    //     //     const requestData = {
-                    //     //         MerchantID: '2000132',
-                    //     //         LogisticsType: 'CVS',
-                    //     //         LogisticsSubType: 'UNIMART',
-                    //     //         IsCollection: 'N',
-                    //     //         ServerReplyURL: '@Url.Action("RequestUrl", "Products", new { area = "Customer" })',
-                    //     //         Device: 0 // 或 1，根據需求設置
-                    //     //     };
-
-                    //     //     const response = await fetch("/api/ProductApi/MapRequest", {
-                    //     //         method: "POST",
-                    //     //         headers: {
-                    //     //             "Content-Type": "application/json"
-                    //     //         },
-                    //     //         body: JSON.stringify(requestData)
-                    //     //     });
-
-                    //     //     const responseData = await response.text();
-                    //     //     Open a new window and display the response content
-                    //     //     window.location.href="https://emap.presco.com.tw/c2cemap.ashx?eshopid=870&&servicetype=1&url=https://localhost:7119/cvs_callback";
-                    //     //     newWindow.document.write(responseData);
-                    //     // } catch (error) {
-                    //     //     console.error("Error:", error);
-                    //     //     document.getElementById("responseContainer").innerText = "Error occurred while sending the request.";
-                    //     // }
-                    // });
-
                     //收到的中文會出現&#x53F0;&#x5317;&#x5E02;&#x5927;&#x5B89;&#x5340;&#x6771;&#x8C50;&#x8857;43&#x865F;45&#x865F;1&#x6A13;
                     //這樣的編碼，透過 decodeEntities 轉成中文
                     function decodeEntities(encodedString) {
@@ -357,7 +341,6 @@
                             return String.fromCharCode(parseInt(hex, 16));
                         });
                     }
-
 
                     var couponListData = {};
                     var logisticsData = {}; // 全局變數用於存儲 logisticsData
@@ -688,10 +671,24 @@
                                     var response = JSON.parse(xhr.responseText);
                                     if (xhr.status === 200 && response.success) {
                                         console.log("訂單新增成功");
+                                        console.log(response.paymentParams);
                                         console.log("response.orderIds", response.orderIds);
                                         // 在提交成功后重定向到指定页面
-                                        var orderIdParams = response.orderIds.join('&');
-                                        window.location.href = '@Url.Action("BookingFinish", "Products", new { area = "Customer", orderIds = "' + orderIdParams + '" })';
+                                        //var orderIdParams = response.orderIds.join('&');
+                                        var form = document.querySelector('form[method="post"]');
+                                        form.querySelector('input[name="MerchantID"]').value = response.paymentParams.merchantID;
+                                        form.querySelector('input[name="MerchantTradeNo"]').value = response.paymentParams.merchantTradeNo;
+                                        form.querySelector('input[name="MerchantTradeDate"]').value = response.paymentParams.merchantTradeDate;
+                                        form.querySelector('input[name="PaymentType"]').value = response.paymentParams.paymentType;
+                                        form.querySelector('input[name="TotalAmount"]').value = response.paymentParams.totalAmount;
+                                        form.querySelector('input[name="TradeDesc"]').value = response.paymentParams.tradeDesc;
+                                        form.querySelector('input[name="ItemName"]').value = response.paymentParams.itemName;
+                                        form.querySelector('input[name="ReturnURL"]').value = response.paymentParams.returnURL;
+                                        form.querySelector('input[name="OrderResultURL"]').value = response.paymentParams.orderResultURL;
+                                        form.querySelector('input[name="ChoosePayment"]').value = response.paymentParams.choosePayment;
+                                        form.querySelector('input[name="CheckMacValue"]').value = response.paymentParams.checkMacValue;
+                                        form.submit();
+                                        //window.location.href = '@Url.Action("BookingFinish", "Products", new { area = "Customer", orderIds = "' + orderIdParams + '" })';
                                     } else {
                                         console.log("訂單新增失敗:", response.message);
                                         // 在此處你可以處理失敗後的操作，例如顯示錯誤提示等
