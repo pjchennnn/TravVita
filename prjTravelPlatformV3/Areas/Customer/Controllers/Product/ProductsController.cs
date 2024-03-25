@@ -51,11 +51,8 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Product
         public IActionResult BookingFinish()
         {
             var CustomerId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (CustomerId == 0)
-            {
-                return RedirectToAction("Index", "Login", new { area = "CustomizedIdentity" });
-            }
             ViewBag.Email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            ViewBag.CustomerId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
             return View();
         }
         public class SevenStore
