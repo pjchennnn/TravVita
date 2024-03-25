@@ -322,9 +322,9 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.CarRent
                         .OrderByDescending(o => o.FOrderId)
                         .Select(o => Convert.ToInt32(o.FTotalPrice)).FirstOrDefault();
                     var TradeDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-                    var checkstr = "HashKey=pwFHCqoQZGmho4w6&ChoosePayment=Credit&EncryptType=1&ItemName=Item&MerchantID=3002607&MerchantTradeDate=" + TradeDate + "&MerchantTradeNo=" + latestOrderId
-                    + "&OrderResultURL=https://67c6-118-166-204-4.ngrok-free.app/Customer/CarRent/CarBookingConfirm" 
-                    +"&PaymentType=aio&ReturnURL=https://67c6-118-166-204-4.ngrok-free.app/Customer/CarRent/CarBookingConfirm" + "&TotalAmount=" + amount
+                    var checkstr = "HashKey=pwFHCqoQZGmho4w6&ChoosePayment=Credit&EncryptType=1&ItemName=Item&MerchantID=3002607&MerchantTradeDate=" + TradeDate + "&MerchantTradeNo=" + latestOrderId 
+                    + "&OrderResultURL=https://localhost:7119/Customer/CarRent/CarBookingConfirm"
+                    + "&PaymentType=aio&ReturnURL=https://localhost:7119/Customer/CarRent/CarBookingConfirm" + "&TotalAmount=" + amount
                     + "&TradeDesc=test&HashIV=EkRm7iFT261dpevs";
 
                     var encodedCheckstr = HttpUtility.UrlEncode(checkstr).ToLower();
@@ -358,8 +358,8 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.CarRent
                         TotalAmount = amount,
                         TradeDesc = "test",
                         ItemName = "Item",
-                        ReturnURL = "https://67c6-118-166-204-4.ngrok-free.app/Customer/CarRent/CarBookingConfirm",
-                        OrderResultURL = "https://67c6-118-166-204-4.ngrok-free.app/Customer/CarRent/CarBookingConfirm",
+                        ReturnURL = "https://localhost:7119/Customer/CarRent/CarBookingConfirm",
+                        OrderResultURL = "https://localhost:7119/Customer/CarRent/CarBookingConfirm",
                         ChoosePayment = "Credit",
                         EncryptType = 1,
                         CheckMacValue = hashedString
