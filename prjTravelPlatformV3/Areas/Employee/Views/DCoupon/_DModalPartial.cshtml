@@ -29,13 +29,13 @@
             <input asp-for="CouponName" id="inputName" class="form-control" >
             <span asp-validation-for="CouponName" class="text-danger"></span>
         </div>
-        <div class="mb-3">
+@*         <div class="mb-3">
             <label asp-for="Amount" class="form-label">@Html.DisplayNameFor(h=>h.Amount)</label>
             <input asp-for="Amount" id="inputAmount" class="form-control">
             <span asp-validation-for="Amount" class="text-danger"></span>
-        </div>
+        </div> *@
         <div class="mb-3">
-            <label asp-for="Discount" class="form-label">@Html.DisplayNameFor(h=>h.Discount)</label>
+            <label asp-for="Discount" class="form-label">@Html.DisplayNameFor(h=>h.Discount) (金額)</label>
             <input asp-for="Discount" id="inputDiscount" class="form-control">
             <span asp-validation-for="Discount" class="text-danger"></span>
         </div>
@@ -47,7 +47,7 @@
             <label asp-for="ProductType" class="form-label">@Html.DisplayNameFor(h=>h.ProductType)</label>
             @* <input asp-for="ProductType" class="form-control"> *@
             <select asp-for="ProductType" id="ProductType" name="choice">
-                <option value="旅遊">旅遊 </option>
+                <option  value="旅遊">旅遊 </option>
                 <option value="住宿">住宿</option>
                 <option value="機票">機票</option>
                 <option value="租車">租車</option>
@@ -65,6 +65,7 @@
             <select asp-for="Rule" name="choice" >
                 <option value="指定品">指定品 </option>
                 <option value="季節">季節</option>
+                <option value="季節">節日</option>
             </select>
             <input asp-for="Rule" id="inputRule" class="form-control" style="display:none;">
         </div>

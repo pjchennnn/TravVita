@@ -19,20 +19,20 @@ namespace prjTravelPlatformV3.Areas.Employee.Controllers.Discount
         #region
         public IActionResult GetData()
         {
-            var coupon = from c in _context.VDcouponViews
+            var coupon = from c in _context.TDcCouponLists
                          select new
                          {
-                             fCouponId = c.優惠卷編號,
-                             fCouponCode = c.折扣碼,
-                             fCouponName = c.名稱,
+                             fCouponId = c.FCouponId,
+                             fCouponCode = c.FCouponCode,
+                             fCouponName = c.FCouponName,
                              //fAmount = "$" + Convert.ToInt32(c.使用金額),
-                             fDiscount = "$" + Convert.ToInt32(c.折扣值),
-                             fStartDate = Convert.ToDateTime(c.啟用日期).ToString("d"),
-                             fEndDate = Convert.ToDateTime(c.截止日期).ToString("d"),
-                             fProductType = c.商品類型,
-                             fRule = c.使用規則,
-                             fNote = c.備註,
-                             fEnable = (bool)c.啟用狀態 ? "已啟用" : "未啟用"
+                             fDiscount = "$" + Convert.ToInt32(c.FDiscount),
+                             fStartDate = Convert.ToDateTime(c.FStartDate).ToString("d"),
+                             fEndDate = Convert.ToDateTime(c.FEndDate).ToString("d"),
+                             fProductType = c.FProductType,
+                             fRule = c.FRule,
+                             fNote = c.FNote,
+                             fEnable = (bool)c.FEnable ? "已啟用" : "未啟用"
                          };
             //foreach(var c in coupon)
             //{
