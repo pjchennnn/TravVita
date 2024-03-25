@@ -208,14 +208,14 @@ namespace prjTravelPlatform_release.Areas.Customer.Controllers.Hotel
                 .GetAvailableRoomsEditFilterByHotelIdAsync(HotelId, DateTime.Parse(StartDate), DateTime.Parse(EndDate));
 
             int roomNumFianl = Int32.Parse(RoomNum);
-            //處理房間數量
-            if (RoomNumSuggest != 0)
-            {
-                if (roomNumFianl != RoomNumSuggest)
-                {
-                    roomNumFianl = (int)RoomNumSuggest;
-                }
-            }
+            ////處理房間數量
+            //if (RoomNumSuggest != 0)
+            //{
+            //    if (roomNumFianl != RoomNumSuggest)
+            //    {
+            //        roomNumFianl = (int)RoomNumSuggest;
+            //    }
+            //}
             
             //依數量選取房間
             var tt = availabelRoom.Where(r => r.fRoomTypeId == RoomTypeId).Take(roomNumFianl);

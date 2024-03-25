@@ -38,7 +38,7 @@
 <div class="emp-container" id="container">
 
     <form id="empLoginForm">
-        <img src="~/img/logof.png" style="width: 220px; height:50px" class="mb-3" />
+        <img src="~/img/logof.png" style="width: 300px; height:50px" class="mb-3" />
         <h3 class="mb-3">後台管理系統</h3>
         <!--登入-->
         <input placeholder="帳號" asp-for="Account" />
@@ -51,11 +51,15 @@
         <a href="#">忘記密碼?</a>
         </div> *@
 
-        <div class="d-flex align-items-center">
-            <img id="imgLoading"src="https://localhost:7119/img/frontstage/tube-spinner_w.svg" style="width: 20px; height: 20px; display:none" />
-            <button id="btnEmpLogin" type="button" onclick="btnEmpLoginClick()">登入</button>
-        </div>
-       
+
+
+        <button style="margin-top: 20px" id="btnEmpLogin" type="button" onclick="btnEmpLoginClick()">
+            <div class="d-flex align-items-center">
+                <img id="imgLoading" src="https://localhost:7119/img/frontstage/tube-spinner_w.svg" style="width: 20px; height: 20px; display:none; margin-right:10px" />
+                <span>登入</span>
+            </div>
+        </button>
+
     </form>
 
     </<div>
@@ -96,7 +100,7 @@
                             window.location.href = "/Employee/Home/Index"
                         }, 1000);
 
-                    }else{
+                    } else {
 
                         if (resData.success === false) {
                             imgLoading.style.display = 'none';
@@ -120,5 +124,3 @@
                 }
             </script>
         }
-
-

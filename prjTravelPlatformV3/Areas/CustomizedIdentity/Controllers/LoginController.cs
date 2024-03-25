@@ -135,7 +135,7 @@ namespace prjTravelPlatform_release.Areas.CustomizedIdentity.Controllers
                     new Claim(ClaimTypes.Name, payload.Name),
                     new Claim(ClaimTypes.Email, payload.Email),
                     new Claim(ClaimTypes.Uri, pic),
-
+                    new Claim(ClaimTypes.Role, "Customer"),
                 };
             var authProperties = new AuthenticationProperties
             {

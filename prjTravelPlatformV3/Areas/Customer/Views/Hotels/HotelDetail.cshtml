@@ -405,6 +405,7 @@
         const sessionStore = JSON.parse(sessionStorage.getItem('filter'));
         let RoomNum = "";
         let personNum = "";
+        
 
         if (sessionStore.length != 0) {
             ipFilter.value = sessionStore.Destination;
@@ -414,6 +415,7 @@
             person.textContent = sessionStore.PersonNum;
             room.textContent = sessionStore.RoomNum;
             RoomNum = parseInt(sessionStore.RoomNum);
+            personNum = sessionStore.PersonNum;
         };
 
         const scrollToElement = (elementId) => {
@@ -453,56 +455,56 @@
                 const resData = await res.json();
                 divRooms.innerHTML = resData.map(room =>
                     `<div class="bg-green-3 rounded-22 px-30 py-30 sm:px-20 sm:py-20 mb-20">
-                                                                            <div class="">
-                                                                                <div class="text-18 fw-700 mb-5">${room.roomTypeName} <span class="text-13 fw-400"
-                                                                                        id="spanMessage">${room.message}</span></div>
-                                                                            </div>
-                                                                            <div class="d-flex col-12 align-items-center x-gap-10">
-                                                                                <div class="col-3">
-                                                                                    <img src="/img/Hotel/RoomType/${room.roomImg}" alt="image" class="rounded-22"
-                                                                                        style="width:280px; height:200px">
-                                                                                </div>
-                                                                                <div class="col-9">
-                                                                                    <div class="bg-white rounded-22 px-30 py-30">
-                                                                                        <div class="row y-gap-30">
-                                                                                            <div class="col-lg-3 ">
-                                                                                                <div class="text-15 fw-700 mb-10">床型及數量</div>
-                                                                                                <div class="y-gap-5">
-                                                                                                    <div class="d-flex items-center text-green-2">
-                                                                                                        <div class="text-15">${room.bedNum}張${room.bedType}</div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-lg-5 border-left-light">
-                                                                                                <div class="text-15 fw-700 mb-10">房間設施</div>
-                                                                                                <div class="row y-gap-10">
-                                                                                                    ${room.rooomFacilities.map(x =>
+                <div class="">
+                    <div class="text-18 fw-700 mb-5">${room.roomTypeName} <span class="text-13 fw-400"
+                            id="spanMessage">${room.message}</span></div>
+                </div>
+                <div class="d-flex col-12 align-items-center x-gap-10">
+                    <div class="col-3">
+                        <img src="/img/Hotel/RoomType/${room.roomImg}" alt="image" class="rounded-22"
+                            style="width:280px; height:200px">
+                    </div>
+                    <div class="col-9">
+                        <div class="bg-white rounded-22 px-30 py-30">
+                            <div class="row y-gap-30">
+                                <div class="col-lg-3 ">
+                                    <div class="text-15 fw-700 mb-10">床型及數量</div>
+                                    <div class="y-gap-5">
+                                        <div class="d-flex items-center text-green-2">
+                                            <div class="text-15">${room.bedNum}張${room.bedType}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 border-left-light">
+                                    <div class="text-15 fw-700 mb-10">房間設施</div>
+                                    <div class="row y-gap-10">
+                                        ${room.rooomFacilities.map(x =>
                         `<div class="col-md-6">
-                                                                                                        <div class="d-flex x-gap-15 y-gap-15 items-center">
-                                                                                                            <img src="/img/Hotel/RoomType/check.png" alt="image"
-                                                                                                                style="width:30px; height:30px">
-                                                                                                            <div class="text-15">${x}</div>
-                                                                                                        </div>
-                                                                                                    </div>`).join('')}
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-lg-4 border-left-light lg:border-none text-right lg:text-left">
-                                                                                                <div class="pl-40 lg:pl-0">
-                                                                                                    <div class="text-14 lh-14 text-light-1 mb-5">每晚價格</div>
-                                                                                                    <div class="text-20 lh-14 fw-500">NT$ ${room.roomPrice}</div>
-                                                                                                    <a class="button h-50 px-35 -dark-1 bg-blue-1 text-white mt-10" style="cursor:pointer"
-                                                                                                        id="sendReqLink"
-                                                                                                        onclick="confirmDialog(${room.roomTypeId}, ${room.roomCount}, ${room.messageValue})">
-                                                                                                        立即預定
-                                                                                                    </a>
-                                                                                                    <span class="text-13 fw-400 text-red-1">${room.roomCountMsg}</span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>`).join('');
+                                        <div class="d-flex x-gap-15 y-gap-15 items-center">
+                                            <img src="/img/Hotel/RoomType/check.png" alt="image"
+                                                style="width:30px; height:30px">
+                                            <div class="text-15">${x}</div>
+                                        </div>
+                                    </div>`).join('')}
+                                </div>
+                            </div>
+                            <div class="col-lg-4 border-left-light lg:border-none text-right lg:text-left">
+                                <div class="pl-40 lg:pl-0">
+                                    <div class="text-14 lh-14 text-light-1 mb-5">每晚價格</div>
+                                    <div class="text-20 lh-14 fw-500">NT$ ${room.roomPrice}</div>
+                                    <a class="button h-50 px-35 -dark-1 bg-blue-1 text-white mt-10" style="cursor:pointer"
+                                        id="sendReqLink"
+                                                onclick="confirmDialog(${room.roomTypeId}, ${room.roomCount}, ${room.messageValue}, ${room.maxCapacity})">
+                                        立即預定
+                                    </a>
+                                    <span class="text-13 fw-400 text-red-1">${room.roomCountMsg}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`).join('');
 
             } catch (error) {
                 console.log(error.message);
@@ -511,7 +513,7 @@
         getRoomType();
 
 
-        const confirmDialog = async (id, roomCount, suggestNum) => {
+        const confirmDialog = async (id, roomCount, suggestNum, maxCapacity) => {
             //如果選擇的房間數量不足，跳出警告
             if (roomCount < RoomNum) {
                 Swal.fire({
@@ -521,12 +523,12 @@
                     showCancelButton: true,
                     cancelButtonColor: "#d33",
                     confirmButtonColor: "#3d737f",
-                    cancelButtonColor: "取消",
+                    cancelButtonText: "取消",
                     confirmButtonText: "確定"
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         RoomNum = roomCount;
-                        window.location = `${window.location.origin}/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${sessionStore.PersonNum}&RoomNum=${RoomNum}&roomNumSuggest=${room.messageValue}`
+                        window.location = `${window.location.origin}/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${sessionStore.PersonNum}&RoomNum=${RoomNum}&roomNumSuggest=${suggestNum}`
                     }
                 });
                 //如果選擇的房間數量與建議的不相符不足，跳出警告
@@ -538,12 +540,12 @@
                     showCancelButton: true,
                     cancelButtonColor: "#d33",
                     confirmButtonColor: "#3d737f",
-                    cancelButtonColor: "取消",
+                    cancelButtonText: "取消",
                     confirmButtonText: "確定"
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         RoomNum = suggestNum;
-                        window.location = `https://localhost:7119/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${sessionStore.PersonNum}&RoomNum=${RoomNum}&roomNumSuggest=${room.messageValue}`
+                        window.location = `https://localhost:7119/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${personNum}&RoomNum=${RoomNum}&roomNumSuggest=${suggestNum}`
                     }
                 });
             } else if (suggestNum != 0 && RoomNum != suggestNum && roomCount < suggestNum) {
@@ -554,16 +556,17 @@
                     showCancelButton: true,
                     cancelButtonColor: "#d33",
                     confirmButtonColor: "#3d737f",
-                    cancelButtonColor: "取消",
+                    cancelButtonText: "取消",
                     confirmButtonText: "確定"
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         RoomNum = roomCount;
-                        window.location = `https://localhost:7119/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${sessionStore.PersonNum}&RoomNum=${RoomNum}&roomNumSuggest=${room.messageValue}`
+                        personNum = maxCapacity;
+                        window.location = `https://localhost:7119/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${personNum}&RoomNum=${RoomNum}&roomNumSuggest=${suggestNum}`
                     }
                 });
             } else {
-                window.location = `https://localhost:7119/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${sessionStore.PersonNum}&RoomNum=${RoomNum}&roomNumSuggest=${room.messageValue}`
+                window.location = `https://localhost:7119/Customer/Hotels/HotelOrder?HotelId=${hotelId}&RoomTypeId=${id}&StartDate=${sessionStore.StartDate}&EndDate=${sessionStore.EndDate}&PersonNum=${personNum}&RoomNum=${RoomNum}&roomNumSuggest=${suggestNum}`
             }
 
 
