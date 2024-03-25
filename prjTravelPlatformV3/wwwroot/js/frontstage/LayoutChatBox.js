@@ -318,7 +318,7 @@ connection.on("UpdContent", function (messageJson) {
     console.log(1)
     var messageInfo = JSON.parse(messageJson);
     //console.log(messageInfo)
-    if (messageInfo.SelfMemberId.includes("E") && currentIndex === -1) { //員工to客戶
+    if (messageInfo.SelfMemberId.includes("E") && prevActiveIndex === -1) { //員工to客戶
         var $messageWrapper = $("<div></div>").addClass("message-wrapper");
         var $profilePic = $("<img>").addClass("message-pp").attr("src", `/img/uploads/${messageInfo.SelfMemberId}.jpg`).attr("alt", "profile-pic");
         var $messageBoxWrapper = $("<div></div>").addClass("message-box-wrapper");
