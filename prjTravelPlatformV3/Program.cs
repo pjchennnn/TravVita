@@ -56,6 +56,7 @@ builder.Services.AddCors(option =>
 	   .AllowAnyHeader());
 });
 
+
 //cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>

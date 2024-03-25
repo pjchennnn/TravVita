@@ -28,6 +28,7 @@
 <body>
 
     <main>
+        
         <div class="masthead__bg" style="position: relative;">
             <img src="~/img/airline/airplane.png" style="filter: brightness(55%); width: 100%; height:320px;" />
             <div class="text-center" style="position: absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
@@ -283,6 +284,21 @@
 
                         </div>
                     </div>
+
+                    <form method="post"  style="display:none;" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
+                        <input type="text" name="MerchantID" />
+                        <input type="text" name="MerchantTradeNo" />
+                        <input type="text" name="MerchantTradeDate" />
+                        <input type="text" name="PaymentType" />
+                        <input type="number" name="TotalAmount" />
+                        <input type="text" name="TradeDesc" />
+                        <input type="text" name="ItemName" />
+                        <input type="text" name="ReturnURL" />
+                        <input type="text" name="OrderResultURL" />
+                        <input type="text" name="ChoosePayment" />
+                        <input type="text" name="EncryptType" />
+                        <input type="text" name="CheckMacValue" />
+                    </form>
                 </div>
             </div>
         </section>
@@ -295,6 +311,8 @@
 @section Scripts {
 
     <script>
+
+
         // 解析URL查詢參數
         var urlParams = new URLSearchParams(window.location.search);
         var outgoingScheduleId = urlParams.get('outgoingScheduleId');
@@ -688,10 +706,25 @@
                     return response.json(); // 將回應轉換為 JSON
                 })
                     .then(datas => {
-                        console.log(datas); // 在這裡處理 JSON 數據
+                        console.log('RoundTripOrder:', datas); // 在這裡處理 JSON 數據
+                        //綠界
+                        var form = document.querySelector('form[method="post"]');
+                        form.querySelector('input[name="MerchantID"]').value = datas.paymentParams.merchantID;
+                        form.querySelector('input[name="MerchantTradeNo"]').value = datas.paymentParams.merchantTradeNo;
+                        form.querySelector('input[name="MerchantTradeDate"]').value = datas.paymentParams.merchantTradeDate;
+                        form.querySelector('input[name="PaymentType"]').value = datas.paymentParams.paymentType;
+                        form.querySelector('input[name="TotalAmount"]').value = datas.paymentParams.totalAmount;
+                        form.querySelector('input[name="TradeDesc"]').value = datas.paymentParams.tradeDesc;
+                        form.querySelector('input[name="ItemName"]').value = datas.paymentParams.itemName;
+                        form.querySelector('input[name="ReturnURL"]').value = datas.paymentParams.returnURL;
+                        form.querySelector('input[name="OrderResultURL"]').value = datas.paymentParams.orderResultURL;
+                        form.querySelector('input[name="ChoosePayment"]').value = datas.paymentParams.choosePayment;
+                        form.querySelector('input[name="EncryptType"]').value = datas.paymentParams.encryptType;
+                        form.querySelector('input[name="CheckMacValue"]').value = datas.paymentParams.checkMacValue;
                         //構建下一個頁面的 URL
-                        var nextUrl = `/Customer/flight/OrderConfirm?outgoingScheduleId=${outgoingScheduleId}&returnScheduleId=${returnScheduleId}&orderId=${datas.orderId}`;
-                        window.location.href = nextUrl;
+                        form.submit();
+                        // var nextUrl = `/Customer/flight/OrderConfirm?outgoingScheduleId=${outgoingScheduleId}&returnScheduleId=${returnScheduleId}&orderId=${datas.orderId}`;
+                        // window.location.href = nextUrl;
                     })
                     .catch(error => {
                         console.error('發生錯誤:', error);
