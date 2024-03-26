@@ -362,6 +362,9 @@
 
                 <div class="col-md-2">
                     <h2 class="text-26" style="font-weight:bold;">旅客資料</h2>
+                    <button class="button -dark-1 px-30 h-50 bg-blue-1 text-white" data-x-click="flight-item-1" id="6" onclick="demo(event)">
+                        Demo
+                    </button>
                 </div>
 
                 <div class="col-md-10">
@@ -736,6 +739,23 @@
                 t.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild.nextElementSibling.value = true;
             }
         }
+
+
+        //demobtn
+        function demo(event) {
+            event.preventDefault();
+            FForPickupOrDeliveryAddress.value = 'S';
+            document.getElementById('SelfPick').click();
+            document.getElementById('0').click();
+            const travelerInfos = document.getElementsByName('travelerInfos');
+            travelerInfos[0].value = 'Zhao, LU LU';
+            travelerInfos[1].value = '趙露露';
+            travelerInfos[2].value = false;
+            travelerInfos[3].value = '2000/3/29';
+            document.getElementById('BirthDay1').innerText = '2000/3/29';
+            FMemo.value = '請盡快，謝謝!'
+        }
+
 
     </script>
 

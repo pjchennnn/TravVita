@@ -207,4 +207,11 @@
     <Folder Include="Areas\Supplier\Views\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\img\uploads\C13.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
