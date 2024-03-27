@@ -479,3 +479,8 @@ document.addEventListener("DOMContentLoaded", function () {
         switchStatus.click();
     }
 });
+
+
+function demo() {
+    document.getElementById('message').value = '你好，請問可以去哪裡購買簽證代辦服務?';
+}
