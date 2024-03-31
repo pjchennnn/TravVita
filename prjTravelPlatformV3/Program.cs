@@ -22,10 +22,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-//builder.Services.AddDbContext<dbTravalPlatformContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
 builder.Services.AddDbContext<dbTravalPlatformContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbTravelConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
+//builder.Services.AddDbContext<dbTravalPlatformContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DbTravelConnection")));
 
 
 
